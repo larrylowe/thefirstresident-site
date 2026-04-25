@@ -9,7 +9,11 @@ export function PurchaseSection() {
         <FadeIn>
           <p className="mb-4 text-sm uppercase tracking-[0.28em] text-antique">Buy Direct</p>
           <h2 className="font-serif text-4xl leading-tight text-parchment md:text-6xl">Own the digital edition</h2>
-          <p className="mt-6 text-lg leading-8 text-aged">Purchase the full digital edition directly from the official site. After payment, you will receive access to the complete book file according to the fulfillment method selected for launch.</p>
+          <p className="mt-6 text-lg leading-8 text-aged">
+            Purchase the full digital edition directly from the official site.
+            After payment, you will receive access to download the complete
+            book file.
+          </p>
         </FadeIn>
         <FadeIn delay={0.15} className="rounded-sm border border-antique/25 bg-charcoal/70 p-8 shadow-2xl">
           <p className="text-sm uppercase tracking-[0.24em] text-antique">Digital Edition</p>
@@ -19,12 +23,20 @@ export function PurchaseSection() {
           <p className="text-5xl font-serif text-parchment">${product.price}</p>
           <ul className="mt-6 space-y-3 text-aged">
             <li>Full digital book file</li>
-            <li>Secure one-time payment</li>
-            <li>Immediate post-purchase confirmation</li>
-            <li>PDF edition, with EPUB possible later</li>
+            <li>Immediate post&#x2011;purchase access</li>
+            <li>PDF edition (EPUB and bundles may be added later)</li>
           </ul>
           <div className="mt-8"><BuyButton>Buy Now</BuyButton></div>
-          <p className="mt-5 text-sm leading-6 text-aged/75">Price and delivery rules can be changed before launch. Stripe test mode should be used first.</p>
+          {/*
+            Display the digital access terms as a discreet footnote.  This makes
+            clear that all digital sales are final, while assuring buyers that
+            help is available if they cannot open or receive the file.
+          */}
+          <p className="mt-5 text-xs leading-5 text-aged/75">
+            Digital purchase terms: all sales are final once the file has been
+            delivered or accessed. If you have trouble opening or receiving
+            your file, contact support and we will help resolve the issue.
+          </p>
         </FadeIn>
       </div>
     </section>

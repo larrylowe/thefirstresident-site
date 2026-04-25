@@ -8,12 +8,41 @@ export function StorySection() {
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-5 md:grid-cols-[1fr_0.85fr] md:px-8">
         <FadeIn>
           <p className="mb-4 text-sm uppercase tracking-[0.28em] text-tobacco">The Story</p>
-          <h2 className="max-w-3xl font-serif text-4xl leading-tight md:text-6xl">A home built on memory. A child who sees too much. A resident who was there first.</h2>
+          {/*
+            Replace the story headline with one that reflects the revised
+            positioning.  Keep the elegant, literary phrasing and punctuate
+            each phrase with a period to build rhythm.
+          */}
+          <h2 className="max-w-3xl font-serif text-4xl leading-tight md:text-6xl">
+            A respectable residence. A buried past. A family truth
+            waiting beneath the floorboards.
+          </h2>
           <div className="my-7 h-px w-32 bg-tobacco/70" />
+          {/*
+            Update the story section body to follow the brief: introduce
+            Chelsea's family, the mysterious fall, the mother's investigation,
+            and the suggestion that the house's past is entwined with their own.
+            Preserve the spacing and typographic styling.
+          */}
           <div className="max-w-2xl space-y-5 text-lg leading-8 text-ink/82">
-            <p>Briar Glen Residence was never meant to feel like an institution. It was a home, or close enough to one, with warm rooms, worn floors, old routines, and stories folded into the walls.</p>
-            <p>Chelsea arrives with the ordinary fears of a child entering an unfamiliar place. What she finds is stranger than fear. Emma is always there, still and silent, a presence the adults explain too quickly and avoid too carefully.</p>
-            <p>As the past begins to surface, Briar Glen becomes less a place of care than a house of unfinished business.</p>
+            <p>
+              When Nana Charlotte suffers a mysterious fall at Briar Glen,
+              Chelsea’s mother Ellen begins looking more closely at the old
+              residence and the strange figure everyone seems too willing to
+              explain away.
+            </p>
+            <p>
+              What now passes as a genteel care home once served another
+              purpose, under another name, in an era no one at Briar Glen seems
+              eager to discuss. The deeper Ellen looks, the clearer it becomes
+              that the house’s past is not merely local history. It is family
+              history.
+            </p>
+            <p>
+              As old records surface and present-day danger closes in, three
+              generations of women must face what the house has kept hidden
+              before Briar Glen claims one of them too.
+            </p>
           </div>
         </FadeIn>
         <FadeIn delay={0.15} className="relative mx-auto w-full max-w-sm">
