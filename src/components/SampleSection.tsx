@@ -1,0 +1,27 @@
+import { FileDown } from "lucide-react";
+import { product } from "@/data/product";
+import { FadeIn } from "./FadeIn";
+
+export function SampleSection() {
+  return (
+    <section id="sample" className="section-anchor paper-texture bg-aged py-24 text-ink">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-5 md:grid-cols-[0.8fr_1fr] md:px-8">
+        <FadeIn>
+          <p className="mb-4 text-sm uppercase tracking-[0.28em] text-tobacco">Read</p>
+          <h2 className="font-serif text-4xl leading-tight md:text-6xl">Begin at Briar Glen</h2>
+        </FadeIn>
+        <FadeIn delay={0.15}>
+          <p className="text-lg leading-8 text-ink/82">Read a sample before purchasing the full digital edition. The sample file can be replaced at any time without changing the page structure.</p>
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+            <a href={product.sampleUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-3 rounded-sm bg-charcoal px-7 py-4 text-sm uppercase tracking-[0.18em] text-parchment transition hover:bg-ink">
+              <FileDown className="h-5 w-5" /> Open Sample PDF
+            </a>
+            <a href="#buy" className="inline-flex items-center justify-center rounded-sm border border-tobacco px-7 py-4 text-sm uppercase tracking-[0.18em] text-ink transition hover:bg-tobacco hover:text-parchment">
+              Buy the Full Edition
+            </a>
+          </div>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}
