@@ -20,7 +20,7 @@ export const product = {
   // tagline used across the hero and marketing materials.
   tagline: "Every House Has A First Resident. This One Never Left.",
   sampleUrl: process.env.NEXT_PUBLIC_SAMPLE_PDF || "/samples/first-resident-sample.pdf",
-  videoUrl: process.env.NEXT_PUBLIC_VIDEO_URL || "",
+  videoUrl: "https://youtu.be/pOdHt66Bue4",
   coverImage: "/images/book-cover.jpg",
   houseImage: "/images/briar-glen-house.jpg",
   videoPoster: "/images/video-poster.jpg"
