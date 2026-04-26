@@ -43,7 +43,7 @@ export function StorySection() {
         </FadeIn>
         <FadeIn delay={0.15} className="relative mx-auto w-full max-w-sm">
           {/* Book mockup without a border for a cleaner presentation */}
-          <div className="relative aspect-[2/3] overflow-hidden rounded-sm bg-charcoal shadow-2xl">
+          <div className="relative aspect-[2/3]">
             <Image
               src={product.coverImage}
               alt="Book cover for The First Resident of Briar Glen by Larry Lowe"
