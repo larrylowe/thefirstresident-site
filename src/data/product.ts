@@ -20,7 +20,7 @@ export const product = {
   // tagline used across the hero and marketing materials.
   tagline: "Every House Has A First Resident. This One Never Left.",
   sampleUrl: process.env.NEXT_PUBLIC_SAMPLE_PDF || "/samples/first-resident-sample.pdf",
-  videoUrl: process.env.NEXT_PUBLIC_VIDEO_URL || "",
+  videoUrl: process.env.NEXT_PUBLIC_VIDEO_URL || "https://youtu.be/pOdHt66Bue4",
   // Use the 3D book mockup for the story section. This file should be placed in
   // public/images/book-mockup.png. The old book-cover.jpg was removed.
   coverImage: "/images/book-mockup.png",
