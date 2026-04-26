@@ -5,13 +5,13 @@ import { product } from "@/data/product";
 
 export function Hero() {
   return (
-    <section id="top" className="relative min-h-screen overflow-hidden bg-charcoal pt-32">
+    <section id="top" className="relative min-h-screen overflow-hidden bg-charcoal pt-24">
       <div className="absolute inset-0 opacity-55">
         <Image src={product.houseImage} alt="Briar Glen Residence" fill priority sizes="100vw" className="object-cover" />
       </div>
       <div className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/82 to-charcoal/25" />
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-charcoal/40" />
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-5 pb-24 pt-10 md:grid-cols-[1.05fr_0.95fr] md:px-8 md:pt-24">
+      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-5 pb-24 pt-6 md:grid-cols-[1.05fr_0.95fr] md:px-8 md:pt-14">
         <FadeIn>
           {/*
             Replace the generic genre label with a more evocative category line.
