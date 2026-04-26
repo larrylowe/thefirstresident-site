@@ -42,7 +42,8 @@ export function StorySection() {
           </div>
         </FadeIn>
         <FadeIn delay={0.15} className="relative mx-auto w-full max-w-sm">
-          <div className="relative aspect-[2/3] overflow-hidden rounded-sm border border-tobacco/30 bg-charcoal shadow-2xl">
+          {/* Book mockup without a border for a cleaner presentation */}
+          <div className="relative aspect-[2/3] overflow-hidden rounded-sm bg-charcoal shadow-2xl">
             <Image
               src={product.coverImage}
               alt="Book cover for The First Resident of Briar Glen by Larry Lowe"
@@ -63,6 +64,18 @@ export function StorySection() {
             <li>Supernatural fiction</li>
             <li>Atmospheric page‑turners</li>
           </ul>
+          {/* Little Charlotte image to anchor the historical narrative visually */}
+          <div className="mt-10 relative w-full overflow-hidden rounded-sm shadow-2xl">
+            <div className="relative h-60 w-full">
+              <Image
+                src={product.charlotteImage}
+                alt="Little Charlotte facing the original residence of Briar Glen"
+                fill
+                sizes="(max-width: 768px) 80vw, 360px"
+                className="object-cover"
+              />
+            </div>
+          </div>
         </FadeIn>
       </div>
     </section>
