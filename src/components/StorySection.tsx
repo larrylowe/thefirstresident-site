@@ -52,28 +52,32 @@ export function StorySection() {
               className="object-cover"
             />
           </div>
-          <p className="mt-5 text-center text-sm uppercase tracking-[0.18em] text-tobacco">
-            Digital edition by {product.author}
-          </p>
-          {/* Fans and genres list to orient readers */}
-          <p className="mt-8 text-xs uppercase tracking-[0.2em] text-tobacco">Perfect for fans&nbsp;of</p>
-          <ul className="mt-3 space-y-2 text-sm italic leading-6 text-ink/80">
-            <li>Haunting family sagas</li>
-            <li>Historical suspense</li>
-            <li>Stories of hidden pasts</li>
-            <li>Supernatural fiction</li>
-            <li>Atmospheric page‑turners</li>
-          </ul>
-          {/* Little Charlotte image to anchor the historical narrative visually */}
-          <div className="mt-10 relative w-full overflow-hidden rounded-sm shadow-2xl">
-            <div className="relative h-60 w-full">
-              <Image
-                src={product.charlotteImage}
-                alt="Little Charlotte facing the original residence of Briar Glen"
-                fill
-                sizes="(max-width: 768px) 80vw, 360px"
-                className="object-cover"
-              />
+                    {/* Digital edition label, fans list, and Charlotte image side-by-side */}
+          <div className="mt-5 flex items-start gap-4">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm uppercase tracking-[0.18em] text-tobacco">
+                Digital edition by {product.author}
+              </p>
+              <p className="mt-6 text-xs uppercase tracking-[0.2em] text-tobacco">Perfect for fans of</p>
+              <ul className="mt-3 space-y-2 text-sm italic leading-6 text-ink/80">
+                <li>Haunting family sagas</li>
+                <li>Historical suspense</li>
+                <li>Stories of hidden pasts</li>
+                <li>Supernatural fiction</li>
+                <li>Atmospheric page‑turners</li>
+              </ul>
+            </div>
+            {/* Charlotte image alongside the copy to avoid stacking */}
+            <div className="w-28 flex-shrink-0 overflow-hidden rounded-sm shadow-xl">
+              <div className="relative h-44 w-full">
+                <Image
+                  src={product.charlotteImage}
+                  alt="Little Charlotte facing the original residence of Briar Glen"
+                  fill
+                  sizes="112px"
+                  className="object-cover"
+                />
+              </div>
             </div>
           </div>
         </FadeIn>
