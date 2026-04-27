@@ -7,7 +7,7 @@ export function Hero() {
   return (
     <section id="top" className="relative min-h-screen overflow-hidden bg-charcoal pt-24">
       <div className="absolute inset-0 opacity-55">
-        <Image src={product.houseImage} alt="Briar Glen Residence" fill priority sizes="100vw" className="object-cover" />
+        <Image src={product.houseImage} alt="Briar Glen Residence" fill priority sizes="100vw" className="object-cover brightness-[1.2]" />
       </div>
       <div className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/82 to-charcoal/25" />
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-charcoal/40" />
