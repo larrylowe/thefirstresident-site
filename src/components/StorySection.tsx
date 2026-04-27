@@ -4,7 +4,7 @@ import { product } from "@/data/product";
 
 export function StorySection() {
   return (
-    <section id="story" className="section-anchor paper-texture bg-parchment py-24 text-ink">
+    <section id="story" className="section-anchor paper-texture bg-parchment pt-12 pb-24 text-ink">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-5 md:grid-cols-[1fr_0.85fr] md:px-8">
         <FadeIn>
           <p className="mb-4 text-sm uppercase tracking-[0.28em] text-tobacco">The Story</p>
