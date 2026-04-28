@@ -17,14 +17,13 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "The First Resident of Briar Glen | Larry Lowe",
-  // Updated description to remove the genre label and align with the refined marketing copy.
-  description: "The official site for The First Resident of Briar Glen, a novel of ancestral memory and family reckoning by Larry Lowe.",
+  title: "The First Resident of Briar Glen | Horror Novel by Larry Lowe",
+  description: "A character-driven horror novel about a child who senses a dangerous presence at Briar Glen, a quiet residence with dark history, family secrets, and supernatural suspense.",
+  keywords: "horror novel, supernatural suspense, family secrets, dark history, character-driven horror, unsettling childhood fear, atmospheric horror, Larry Lowe, The First Resident of Briar Glen",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://thefirstresident.com"),
   openGraph: {
     title: "The First Resident of Briar Glen",
-    // Use the refined tagline in open graph metadata.
-    description: "Every House Has A First Resident. This One Never Left.",
+    description: "Nine-year-old Chelsea Parker visits Briar Glen and discovers that one resident has been waiting for her family to return.",
     type: "website"
   }
 };

@@ -8,16 +8,16 @@ export function SampleSection() {
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-5 md:grid-cols-[0.8fr_1fr] md:px-8">
         <FadeIn>
           <p className="mb-4 text-sm uppercase tracking-[0.28em] text-tobacco">Read</p>
-          <h2 className="font-serif text-4xl leading-tight md:text-6xl">Begin at Briar Glen</h2>
+          <h2 className="font-serif text-4xl leading-tight md:text-6xl">Visit Briar Glen with Chelsea</h2>
         </FadeIn>
         <FadeIn delay={0.15}>
-          <p className="text-lg leading-8 text-ink/82">Read a sample before purchasing the full digital edition. The sample file can be replaced at any time without changing the page structure.</p>
+          <p className="text-lg leading-8 text-ink/82">Until now, Briar Glen has been a quiet place for a visit, a story, and a few hours beside Nana Charlotte. Chelsea soon understands that one resident has been quietly waiting for her family to return.</p>
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
             <a href={product.sampleUrl} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-3 rounded-sm bg-charcoal px-7 py-4 text-sm uppercase tracking-[0.18em] text-parchment transition hover:bg-ink">
-              <FileDown className="h-5 w-5" /> Open Sample PDF
+              <FileDown className="h-5 w-5" /> Enter Briar Glen
             </a>
             <a href="#buy" className="inline-flex items-center justify-center rounded-sm border border-tobacco px-7 py-4 text-sm uppercase tracking-[0.18em] text-ink transition hover:bg-tobacco hover:text-parchment">
-              Buy the Full Edition
+              Get the Full Story
             </a>
           </div>
         </FadeIn>

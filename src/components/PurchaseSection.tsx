@@ -9,11 +9,13 @@ export function PurchaseSection() {
         <FadeIn>
           <p className="mb-4 text-sm uppercase tracking-[0.28em] text-antique">Buy Direct</p>
           <h2 className="font-serif text-4xl leading-tight text-parchment md:text-6xl">
-            Ready to uncover what Briar Glen has been keeping?
+            Open the door to Briar Glen.
           </h2>
           <p className="mt-6 text-lg leading-8 text-aged">
-            Purchase the full digital edition directly from the author. After payment,
-            you'll receive immediate access to download and read the complete book.
+            Continue past the first visit and follow Chelsea deeper into Briar Glen, where what has been waiting is no longer content to remain unseen. After purchase, the full digital edition is available immediately for download and reading.
+          </p>
+          <p className="mt-5 font-serif text-xl italic text-antique">
+            The first resident is still here.
           </p>
         </FadeIn>
         <FadeIn delay={0.15} className="rounded-sm border border-antique/25 bg-charcoal/70 p-8 shadow-2xl">
@@ -30,17 +32,12 @@ export function PurchaseSection() {
           </p>
           <ul className="mt-6 space-y-3 text-aged">
             <li>Instant digital book file</li>
-            <li>Secure one‑time payment</li>
+            <li>Secure one-time payment</li>
             <li>PDF edition (EPUB may follow later)</li>
           </ul>
           <div className="mt-8">
             <BuyButton>Buy the Ebook – ${product.price}</BuyButton>
           </div>
-          {/*
-            Display the digital access terms as a discreet footnote.  This makes
-            clear that all digital sales are final, while assuring buyers that
-            help is available if they cannot open or receive the file.
-          */}
           <p className="mt-5 text-xs leading-5 text-aged/75">
             Digital purchase terms: all sales are final once the file has been
             delivered or accessed. If you have trouble opening or receiving

@@ -20,7 +20,7 @@ export function Hero() {
             not to narrow the audience.  Keep the uppercase styling intact.
           */}
           <p className="mb-5 text-sm uppercase tracking-[0.3em] text-antique">
-            A Novel of Ancestral Memory and Family Reckoning
+            A Novel of Horror, Dark History, and Family Reckoning
           </p>
           <h1 className="font-serif text-5xl font-semibold uppercase leading-[0.92] tracking-[0.08em] text-parchment md:text-7xl lg:text-8xl">
             The First<br />Resident<br />of Briar Glen
@@ -34,9 +34,10 @@ export function Hero() {
             copy should reinforce the tagline without repeating it.
           */}
           <p className="mt-6 max-w-2xl text-lg leading-8 text-aged">
-            Some houses have names. Some have histories. Briar Glen has both,
-            and neither is what it seems. The past is not past here. It is
-            patient.
+            Briar Glen has cared for many residents. None as dangerous as its first.
+          </p>
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-aged">
+            What waits inside has been ignored, dismissed, and mistaken for something harmless enough to leave alone. Chelsea Parker knows better.
           </p>
           <div className="mt-9 flex flex-col gap-4 sm:flex-row">
             <BuyButton />
