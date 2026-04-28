@@ -28,6 +28,34 @@ export function StorySection() {
               Some secrets are hidden for a reason. Some refuse to stay in the dark.
             </p>
           </div>
+
+          {/* Charlotte image + editorial copy — side by side under story body */}
+          <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-start">
+            <div className="shrink-0 overflow-hidden rounded-sm shadow-xl md:w-[340px]">
+              <div className="relative h-64 w-full md:h-[280px]">
+                <Image
+                  src={product.charlotteImage}
+                  alt="Little Charlotte facing the original residence of Briar Glen"
+                  fill
+                  sizes="(max-width: 768px) 80vw, 340px"
+                  className="object-cover object-top"
+                />
+              </div>
+            </div>
+            <div>
+              <p className="text-sm uppercase tracking-[0.18em] text-tobacco">
+                Digital edition by {product.author}
+              </p>
+              <p className="mt-6 text-xs uppercase tracking-[0.2em] text-tobacco">Perfect for fans of</p>
+              <ul className="mt-3 space-y-2 text-sm italic leading-6 text-ink/80">
+                <li>Character-driven horror</li>
+                <li>Family secrets</li>
+                <li>Supernatural suspense</li>
+                <li>Unsettling childhood fear</li>
+                <li>Atmospheric page-turners</li>
+              </ul>
+            </div>
+          </div>
         </FadeIn>
 
         <FadeIn delay={0.15} className="relative mx-auto w-full max-w-sm">
@@ -40,34 +68,6 @@ export function StorySection() {
               sizes="(max-width: 768px) 80vw, 360px"
               className="object-cover"
             />
-          </div>
-
-          {/* Digital edition label */}
-          <p className="mt-5 text-sm uppercase tracking-[0.18em] text-tobacco">
-            Digital edition by {product.author}
-          </p>
-
-          {/* Fans list */}
-          <p className="mt-6 text-xs uppercase tracking-[0.2em] text-tobacco">Perfect for fans of</p>
-          <ul className="mt-3 space-y-2 text-sm italic leading-6 text-ink/80">
-            <li>Character-driven horror</li>
-            <li>Family secrets</li>
-            <li>Supernatural suspense</li>
-            <li>Unsettling childhood fear</li>
-            <li>Atmospheric page-turners</li>
-          </ul>
-
-          {/* Charlotte image — larger presence beneath fans list */}
-          <div className="mt-6 overflow-hidden rounded-sm shadow-xl">
-            <div className="relative h-64 w-full">
-              <Image
-                src={product.charlotteImage}
-                alt="Little Charlotte facing the original residence of Briar Glen"
-                fill
-                sizes="(max-width: 768px) 80vw, 360px"
-                className="object-cover object-top"
-              />
-            </div>
           </div>
         </FadeIn>
       </div>

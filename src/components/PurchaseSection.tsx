@@ -14,7 +14,7 @@ export function PurchaseSection() {
           <p className="mt-6 text-lg leading-8 text-aged">
             Continue past the first visit and follow Chelsea deeper into Briar Glen, where what has been waiting is no longer content to remain unseen. After purchase, the full digital edition is available immediately for download and reading.
           </p>
-          <p className="mt-5 font-serif text-xl italic text-antique">
+          <p className="mt-5 font-serif text-lg italic text-antique md:text-2xl">
             The first resident is still here.
           </p>
         </FadeIn>
