@@ -34,7 +34,7 @@ export function Hero() {
             copy should reinforce the tagline without repeating it.
           */}
           <p className="mt-6 max-w-2xl text-lg leading-8 text-aged">
-            Briar Glen has cared for many residents. None as dangerous as its first.
+            Many residents have called Briar Glen home. None as dangerous as its first.
           </p>
           <p className="mt-4 max-w-2xl text-lg leading-8 text-aged">
             What waits inside has been ignored, dismissed, and mistaken for something harmless enough to leave alone. Chelsea Parker knows better.

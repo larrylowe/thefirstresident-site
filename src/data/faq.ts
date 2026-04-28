@@ -21,6 +21,6 @@ export const faqs = [
   },
   {
     question: "Is this part of a series?",
-    answer: "This site is built so future titles or related releases can be added without rebuilding from scratch."
+    answer: "The novel is complete as a standalone story, but Briar Glen is only the beginning. Future releases may explore new characters, new mysteries, and other unsettling adventures across horror, suspense, and dark storytelling."
   }
 ];
