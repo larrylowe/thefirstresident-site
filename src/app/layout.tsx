@@ -26,7 +26,10 @@ export const metadata: Metadata = {
     title: "The First Resident of Briar Glen",
     description: "Nine-year-old Chelsea Parker visits Briar Glen and discovers that one resident has been waiting for her family to return.",
     type: "website"
-  }
+  },
+  other: {
+    "facebook-domain-verification": "zfr6f9q466r88tqbvvst2nf0ns148x",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
