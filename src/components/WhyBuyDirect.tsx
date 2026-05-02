@@ -60,6 +60,20 @@ export function PrivacyNotice() {
       id="privacy-notice"
       className="fixed bottom-0 inset-x-0 z-40 border-t border-antique/20 bg-charcoal/95 px-5 py-3 backdrop-blur-sm md:px-8"
     >
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              var pref = null;
+              try { pref = localStorage.getItem('cookie-consent'); } catch(e) {}
+              if (pref === 'accepted' || pref === 'rejected') {
+                var el = document.getElementById('privacy-notice');
+                if (el) el.style.display = 'none';
+              }
+            })();
+          `,
+        }}
+      />
       <div className="mx-auto flex max-w-7xl flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs leading-5 text-aged/80">
           We use cookies, pixels, and similar technologies to understand site activity, measure
@@ -79,8 +93,19 @@ export function PrivacyNotice() {
           </Link>
           <button
             onClick={() => {
-              const el = document.getElementById("privacy-notice");
-              if (el) el.style.display = "none";
+              try { localStorage.setItem('cookie-consent', 'rejected'); } catch(e) {}
+              const el = document.getElementById('privacy-notice');
+              if (el) el.style.display = 'none';
+            }}
+            className="whitespace-nowrap rounded-sm border border-antique/50 px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-aged transition hover:border-antique hover:text-parchment"
+          >
+            Reject
+          </button>
+          <button
+            onClick={() => {
+              try { localStorage.setItem('cookie-consent', 'accepted'); } catch(e) {}
+              const el = document.getElementById('privacy-notice');
+              if (el) el.style.display = 'none';
             }}
             className="whitespace-nowrap rounded-sm bg-antique px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-charcoal transition hover:bg-parchment"
           >
