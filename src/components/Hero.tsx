@@ -40,6 +40,9 @@ export function Hero() {
             What waits inside has been ignored, dismissed, and mistaken for something harmless enough to leave alone. Chelsea Parker knows better.
           </p>
           <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+            <a href="#sample" className="rounded-sm bg-antique px-7 py-4 text-center text-sm uppercase tracking-[0.18em] text-charcoal transition hover:bg-parchment">
+              Get the Free Sample
+            </a>
             <BuyButton />
             <a href="#watch" className="rounded-sm border border-antique/70 px-7 py-4 text-center text-sm uppercase tracking-[0.18em] text-parchment transition hover:bg-parchment hover:text-charcoal">
               Watch Synopsis

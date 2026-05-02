@@ -9,3 +9,9 @@ node_modules/
 
 # TypeScript build info
 tsconfig.tsbuildinfo
+
+# Full e-book PDF — upload via scripts/upload-ebook-to-blob.mjs, never commit
+*.pdf
+!public/**/*.pdf
+.vercel
+.env*.local

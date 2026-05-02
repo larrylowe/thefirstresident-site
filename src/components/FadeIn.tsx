@@ -1,11 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
+
+// motion-dom ships without type declarations in the installed version of
+// framer-motion, so HTMLMotionProps loses its animation props at the TS level.
+// This cast restores them without affecting runtime behaviour.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const MotionDiv = motion.div as ComponentType<any>;
 
 export function FadeIn({ children, className = "", delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   return (
-    <motion.div
+    <MotionDiv
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
@@ -13,6 +19,6 @@ export function FadeIn({ children, className = "", delay = 0 }: { children: Reac
       className={className}
     >
       {children}
-    </motion.div>
+    </MotionDiv>
   );
 }

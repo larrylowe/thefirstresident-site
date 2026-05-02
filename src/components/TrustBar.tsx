@@ -1,8 +1,7 @@
-import { BookOpen, FileText, LockKeyhole, BadgeCheck } from "lucide-react";
+import { BookOpen, FileText, LockKeyhole } from "lucide-react";
 
 // The trust bar highlights three key reasons to purchase: immediate access,
-// secure checkout, and a polished PDF reading experience.  We deliberately
-// avoid promises of refunds or generic "official site" claims here.
+// secure checkout, and a polished PDF reading experience.
 const items = [
   { icon: BookOpen, title: "Instant Download", text: "Read immediately on any device" },
   { icon: LockKeyhole, title: "Secure Payment", text: "Processed securely by Stripe" },
@@ -26,3 +25,4 @@ export function TrustBar() {
     </section>
   );
 }
+

@@ -5,7 +5,7 @@ import { StorySection } from "@/components/StorySection";
 import { VideoSynopsis } from "@/components/VideoSynopsis";
 import { SampleSection } from "@/components/SampleSection";
 import { PurchaseSection } from "@/components/PurchaseSection";
-import { WhyBuyDirect } from "@/components/WhyBuyDirect";
+import { WhyBuyDirect, LaunchBar, PrivacyNotice } from "@/components/WhyBuyDirect";
 import { AuthorSection } from "@/components/AuthorSection";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
@@ -13,6 +13,7 @@ import { Footer } from "@/components/Footer";
 export default function Home() {
   return (
     <main>
+      <LaunchBar />
       <Navbar />
       <Hero />
       <TrustBar />
@@ -24,6 +25,7 @@ export default function Home() {
       <AuthorSection />
       <FAQ />
       <Footer />
+      <PrivacyNotice />
     </main>
   );
 }
