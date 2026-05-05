@@ -1,0 +1,30 @@
+export const product = {
+  title: "The First Resident of Briar Glen",
+  author: "Larry Lowe",
+  format: "Digital edition, PDF",
+  /**
+   * Pricing strategy:
+   * Launch introductory price for the first two weeks.
+   * After the launch period ends, the price increases to the full retail price.
+   * Both values can be overridden via environment variables if needed.
+   */
+  introPrice: process.env.NEXT_PUBLIC_INTRO_PRICE || "4.99",
+  regularPrice: process.env.NEXT_PUBLIC_REGULAR_PRICE || "6.99",
+  price:
+    process.env.NEXT_PUBLIC_PRODUCT_PRICE ||
+    process.env.NEXT_PUBLIC_INTRO_PRICE ||
+    "4.99",
+  tagline: "Every House Has A First Resident. This One Never Left.",
+  sampleUrl: process.env.NEXT_PUBLIC_SAMPLE_PDF || "/samples/first-resident-sample.pdf",
+  videoUrl: process.env.NEXT_PUBLIC_VIDEO_URL || "https://youtu.be/pOdHt66Bue4",
+  /**
+   * NOTE: The seven approved section images (Section 1 House.png through
+   * Section 7 CTA.png) are referenced directly in their respective components
+   * using URL-encoded paths. The following legacy image files in /public/images
+   * are no longer used and can be manually deleted:
+   *   - book-mockup.png
+   *   - briar-glen-house.jpg
+   *   - little-charlotte-plantation.png
+   *   - video-poster.jpg
+   */
+};

@@ -1,52 +1,55 @@
 import Image from "next/image";
 import { BuyButton } from "./BuyButton";
 import { FadeIn } from "./FadeIn";
-import { product } from "@/data/product";
+
+const sampleUrl = "/samples/first-resident-sample.pdf";
 
 export function Hero() {
   return (
-    <section id="top" className="relative min-h-screen overflow-hidden bg-charcoal pt-24">
-      <div className="absolute inset-0 opacity-55">
-        <Image src={product.houseImage} alt="Briar Glen Residence" fill priority sizes="100vw" className="object-cover brightness-[1.2]" />
-      </div>
-      <div className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/82 to-charcoal/25" />
-      <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-charcoal/40" />
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-5 pb-24 pt-6 md:grid-cols-[1.05fr_0.95fr] md:px-8 md:pt-14">
-        <FadeIn>
-          {/*
-            Replace the generic genre label with a more evocative category line.
-            The brief calls for "A Novel of Ancestral Memory and Family Reckoning"
-            as the public-facing descriptor rather than "Southern Gothic" so as
-            not to narrow the audience.  Keep the uppercase styling intact.
-          */}
-          <p className="mb-5 text-sm uppercase tracking-[0.3em] text-antique">
-            A Novel of Horror, Dark History, and Family Reckoning
-          </p>
-          <h1 className="font-serif text-5xl font-semibold uppercase leading-[0.92] tracking-[0.08em] text-parchment md:text-7xl lg:text-8xl">
-            The First<br />Resident<br />of Briar Glen
+    <section id="hero" className="relative min-h-screen overflow-hidden bg-charcoal">
+      {/* Full-width background image */}
+      <Image
+        src="/images/Section%201%20House.png"
+        alt="Briar Glen Residence at night under a stormy sky"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-center"
+      />
+      {/* Gradient overlays for left-side text legibility */}
+      <div className="absolute inset-0 bg-gradient-to-r from-charcoal/95 via-charcoal/70 to-charcoal/15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-charcoal/35" />
+
+      {/* Content */}
+      <div className="relative z-10 flex min-h-screen flex-col justify-center px-6 pt-28 pb-20 md:px-14 lg:px-20">
+        <FadeIn className="max-w-lg lg:max-w-2xl">
+          <h1 className="font-serif text-4xl font-semibold uppercase leading-[0.9] tracking-[0.05em] text-parchment sm:text-5xl md:text-6xl lg:text-7xl">
+            Every house has<br />a first resident.<br />
+            <span className="text-antique">This one never left.</span>
           </h1>
-          <div className="my-8 h-px w-44 bg-antique/70" />
-          <p className="max-w-xl font-serif text-2xl italic leading-snug text-antique md:text-3xl">{product.tagline}</p>
-          {/*
-            Update the hero body copy to preserve mystery and align with the
-            refined marketing language.  Avoid direct plot spoilers and frame
-            the house as a place where the past remains present.  This body
-            copy should reinforce the tagline without repeating it.
-          */}
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-aged">
-            Many residents have called Briar Glen home. None as dangerous as its first.
+
+          <div className="my-6 flex items-center gap-3">
+            <div className="h-px w-12 bg-antique/60" />
+            <div className="h-1 w-1 rotate-45 bg-antique/70" />
+            <div className="h-px w-12 bg-antique/60" />
+          </div>
+
+          <p className="text-base leading-8 text-aged md:text-[17px]">
+            Step into the shadowed past of Briar Glen,<br className="hidden sm:block" />
+            where history whispers and something<br className="hidden sm:block" />
+            still waits behind the door.
           </p>
-          <p className="mt-4 max-w-2xl text-lg leading-8 text-aged">
-            What waits inside has been ignored, dismissed, and mistaken for something harmless enough to leave alone. Chelsea Parker knows better.
-          </p>
-          <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-            <a href="#sample" className="rounded-sm bg-antique px-7 py-4 text-center text-sm uppercase tracking-[0.18em] text-charcoal transition hover:bg-parchment">
-              Get the Free Sample
+
+          <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <a
+              href={sampleUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center border border-antique/80 px-7 py-4 text-center text-sm uppercase tracking-[0.18em] text-parchment transition hover:border-antique hover:bg-antique hover:text-charcoal"
+            >
+              Read Chapter One
             </a>
-            <BuyButton />
-            <a href="#watch" className="rounded-sm border border-antique/70 px-7 py-4 text-center text-sm uppercase tracking-[0.18em] text-parchment transition hover:bg-parchment hover:text-charcoal">
-              Watch Synopsis
-            </a>
+            <BuyButton>Buy the Ebook</BuyButton>
           </div>
         </FadeIn>
       </div>

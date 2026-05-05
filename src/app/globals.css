@@ -30,8 +30,13 @@ body {
   color: #151512;
 }
 
+/* All sections with an id get correct scroll-offset for sticky nav */
+section[id] {
+  scroll-margin-top: 80px;
+}
+
 .section-anchor {
-  scroll-margin-top: 112px;
+  scroll-margin-top: 80px;
 }
 
 .paper-texture {
