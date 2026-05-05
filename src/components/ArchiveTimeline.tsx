@@ -5,8 +5,21 @@ import { useState, useId } from "react";
 import { timelineEntries, type TimelineEntry } from "@/data/archiveTimeline";
 import { ArchiveFileModal } from "./ArchiveFileModal";
 
-const MEDALLION = 56; // px — diameter of each numbered circle
-const SPINE_X   = 28; // px — from list-wrapper left edge to spine centre
+// ─── Layout constants ────────────────────────────────────────
+const MEDALLION = 56;  // px — circle diameter
+const SPINE_X   = 28;  // px — spine centre from list left edge (= MEDALLION / 2)
+
+// Desktop grid:
+//   col 1  = label area  (medallion + connector + year/title)  fixed at LABEL_W
+//   col 2  = card area   (detail card)                         fixed at CARD_W
+//   gap    = 40px
+//
+// We want the card to sit ~40px to the right of the label text,
+// so LABEL_W needs to be just wide enough for the longest title.
+// 280px comfortably fits all nine entries at 15px serif.
+const LABEL_W = 280; // px
+const CARD_W  = 300; // px
+const COL_GAP = 40;  // px — gap between label col and card col
 
 export function ArchiveTimeline() {
   const [activeEntry, setActiveEntry] = useState<TimelineEntry | null>(null);
@@ -20,14 +33,13 @@ export function ArchiveTimeline() {
 
   return (
     <>
-      {/* ── Section ──────────────────────────────────────── */}
       <section
         id="archive-timeline"
         className="relative overflow-hidden bg-charcoal"
         style={{ scrollMarginTop: "80px" }}
         aria-label="The Whitmore Investigation timeline"
       >
-        {/* Background artwork */}
+        {/* Background */}
         <div className="absolute inset-0 select-none" aria-hidden="true">
           <Image
             src="/images/archive-timeline-clean.png"
@@ -40,10 +52,10 @@ export function ArchiveTimeline() {
           <div className="absolute inset-0 bg-charcoal/72" />
         </div>
 
-        {/* ── Content ──────────────────────────────────────── */}
+        {/* Content */}
         <div className="relative z-10 mx-auto max-w-[1100px] px-4 py-20 sm:px-8 md:py-28">
 
-          {/* ── Header ──────────────────────────────────────── */}
+          {/* Header */}
           <div className="mb-16 text-center">
             <p className="text-[10px] uppercase tracking-[0.36em] text-antique">
               The First Resident Archive
@@ -62,16 +74,25 @@ export function ArchiveTimeline() {
             </p>
           </div>
 
-          {/* ── Timeline list ────────────────────────────────
-            Layout per row (desktop):
-              [medallion 56px] [connector 12px] [year+title flex] [card 300px]
+          {/*
+            ── Timeline ───────────────────────────────────────────────
+            DESKTOP (≥ 700px):
+              Each row is a CSS grid:
+                [label LABEL_W px]  [COL_GAP px gap]  [card CARD_W px]
 
-            Layout per row (mobile < 900px):
-              [medallion 56px] [connector 12px] [year+title]
-                               ↳ card drops inline below when active
+              The label column holds the button (medallion + short
+              connector + year/title). The card column holds the detail
+              card — it only occupies real space on the active row;
+              inactive rows render nothing there, so there's no phantom
+              column forcing extra width.
 
-            The gold spine runs behind the medallions as a 1px absolute line.
-          ── */}
+              A short 32px gold connector runs inside the button, right-
+              aligned against the label column's right edge, bridging the
+              label → card gap visually.
+
+            MOBILE (< 700px):
+              Single column. Card renders inline below the button row.
+          */}
           <div
             className="relative"
             role="list"
@@ -85,8 +106,8 @@ export function ArchiveTimeline() {
             />
 
             {timelineEntries.map((entry, idx) => {
-              const isActive = activeEntry?.slug === entry.slug;
-              const isLast   = idx === timelineEntries.length - 1;
+              const isActive    = activeEntry?.slug === entry.slug;
+              const isLast      = idx === timelineEntries.length - 1;
               const cardPanelId = `${sectionId}-card-${entry.slug}`;
 
               return (
@@ -96,17 +117,21 @@ export function ArchiveTimeline() {
                   className={isLast ? "" : "mb-1"}
                 >
                   {/*
-                    The outer div is a flex row that holds:
-                    - the button (medallion + connector + text) on the left
-                    - the detail card on the right (desktop only, hidden on mobile)
-
-                    On desktop (≥ 900px / tw: "min-[900px]") the card slides in
-                    to the right of the text on the same row.
-                    On mobile the card is rendered below the button as a block.
+                    Row wrapper.
+                    Desktop: CSS grid — label col | card col (only has width when active)
+                    Mobile:  flex column — button on top, card below when active
                   */}
-                  <div className="flex flex-col min-[900px]:flex-row min-[900px]:items-start min-[900px]:gap-0">
-
-                    {/* ── Node button ─────────────────────────── */}
+                  <div
+                    className="flex flex-col min-[700px]:grid min-[700px]:items-start"
+                    style={{
+                      // Desktop grid: label fixed | card fixed; gap COL_GAP px
+                      gridTemplateColumns: isActive
+                        ? `${LABEL_W}px ${CARD_W}px`
+                        : `${LABEL_W}px`,
+                      columnGap: COL_GAP,
+                    }}
+                  >
+                    {/* ── Button (label column) ─────────────────── */}
                     <button
                       aria-pressed={isActive}
                       aria-expanded={isActive}
@@ -115,17 +140,18 @@ export function ArchiveTimeline() {
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
                           e.preventDefault();
-                          // Second press on active node opens file modal
                           isActive ? openModal(entry) : activate(entry);
                         }
                       }}
                       className={`
-                        group flex w-full items-center py-3 pr-3 text-left
+                        group flex w-full items-center py-3 text-left
                         rounded-sm transition-colors duration-150
                         focus:outline-none focus-visible:ring-2 focus-visible:ring-antique/70
-                        min-[900px]:flex-1 min-[900px]:min-w-0
                         ${isActive ? "bg-charcoal/35" : "hover:bg-charcoal/20"}
                       `}
+                      // On desktop the button fills col 1 (LABEL_W).
+                      // On mobile it's full width.
+                      style={{ minWidth: 0 }}
                     >
                       {/* Medallion */}
                       <span
@@ -144,17 +170,17 @@ export function ArchiveTimeline() {
                         {entry.number}
                       </span>
 
-                      {/* Short connector: medallion → text */}
+                      {/* Medallion → text connector (always present) */}
                       <span
                         aria-hidden="true"
-                        style={{ width: 12, flexShrink: 0 }}
                         className={`h-px transition-colors duration-300 ${
                           isActive ? "bg-antique/65" : "bg-antique/20 group-hover:bg-antique/40"
                         }`}
+                        style={{ width: 12, flexShrink: 0 }}
                       />
 
                       {/* Year + title */}
-                      <span className="flex min-w-0 flex-col">
+                      <span className="flex min-w-0 flex-1 flex-col">
                         <span className={`
                           text-[10px] uppercase tracking-[0.24em] transition-colors duration-200
                           ${isActive ? "text-antique" : "text-antique/55 group-hover:text-antique/85"}
@@ -169,34 +195,34 @@ export function ArchiveTimeline() {
                         </span>
                       </span>
 
-                      {/* Desktop: long connector from text right-edge → card left-edge */}
+                      {/*
+                        Active → card connector: 32px gold line, flush right
+                        inside the label column, only visible on desktop when active.
+                        This visually bridges the gap between the label col and card col.
+                      */}
                       {isActive && (
                         <span
                           aria-hidden="true"
-                          className="mx-3 hidden h-px flex-1 bg-antique/50 min-[900px]:block"
-                          style={{ minWidth: 20, maxWidth: 60 }}
+                          className="hidden h-px bg-antique/55 min-[700px]:block"
+                          style={{ width: 32, flexShrink: 0 }}
                         />
                       )}
                     </button>
 
-                    {/* ── Detail card ─────────────────────────────
-                      Desktop: inline on same row, fixed width, only visible when active.
-                      Mobile:  block below the button row, only visible when active.
-                    ── */}
+                    {/* ── Detail card (card column on desktop / inline on mobile) ── */}
                     <div
                       id={cardPanelId}
                       role="region"
                       aria-label={`Details: ${entry.title}`}
                       aria-live="polite"
-                      className={`
-                        transition-all duration-200
-                        ${isActive ? "block" : "hidden"}
-                        min-[900px]:w-[280px] min-[900px]:shrink-0
-                        w-full
-                      `}
+                      className={isActive ? "block" : "hidden"}
                     >
                       {isActive && (
-                        <div className="border border-antique/45 bg-charcoal/90 shadow-[0_0_32px_0_rgba(0,0,0,0.6)] backdrop-blur-sm mx-0 mb-2 min-[900px]:mb-0">
+                        /* Mobile: mt-4, full width.  Desktop: no top margin, CARD_W wide. */
+                        <div
+                          className="mt-4 min-[700px]:mt-0 border border-antique/45 bg-charcoal/90 shadow-[0_0_32px_0_rgba(0,0,0,0.6)] backdrop-blur-sm"
+                          style={{ maxWidth: CARD_W }}
+                        >
                           {/* Card header */}
                           <div className="border-b border-antique/20 px-5 py-4">
                             <p className="text-[10px] uppercase tracking-[0.28em] text-antique">
@@ -230,7 +256,7 @@ export function ArchiveTimeline() {
                       )}
                     </div>
 
-                  </div>{/* end row */}
+                  </div>
                 </div>
               );
             })}
@@ -245,7 +271,6 @@ export function ArchiveTimeline() {
               </p>
             </div>
           </div>
-
         </div>
       </section>
 
