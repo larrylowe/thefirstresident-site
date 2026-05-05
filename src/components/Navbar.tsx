@@ -52,7 +52,7 @@ export function Navbar() {
             rel="noopener noreferrer"
             className="border border-antique/70 px-5 py-2.5 text-[11px] uppercase tracking-[0.2em] text-parchment transition hover:border-antique hover:bg-antique hover:text-charcoal"
           >
-            Read Chapter One
+            Read Free Sample
           </a>
         </div>
 
@@ -89,7 +89,7 @@ export function Navbar() {
               onClick={() => setOpen(false)}
               className="mt-3 border border-antique/70 px-6 py-3 text-center text-sm uppercase tracking-[0.2em] text-parchment transition hover:bg-antique hover:text-charcoal"
             >
-              Read Chapter One
+              Read Free Sample
             </a>
           </div>
         </div>

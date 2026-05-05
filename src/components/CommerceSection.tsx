@@ -54,7 +54,7 @@ export function CommerceSection() {
               rel="noopener noreferrer"
               className="inline-block border border-antique/70 bg-antique/10 px-7 py-4 text-sm uppercase tracking-[0.2em] text-parchment transition hover:border-antique hover:bg-antique hover:text-charcoal"
             >
-              Read Chapter One
+              Read Free Sample
             </a>
           </div>
         </FadeIn>
