@@ -16,12 +16,12 @@ export function CommerceSection() {
       {/* Full-width background image */}
       <Image
         src="/images/Section%204%20Commerce%20section.png"
-        alt="The First Resident of Briar Glen — ebook cover with lantern and antique clock"
+        alt="The First Resident of Briar Glen ebook cover"
         fill
         sizes="100vw"
-        className="object-cover object-center"
+        className="object-cover object-center scale-[1.02]"
       />
-      {/* Dark overlay — lighter in center so cover shows through */}
+      {/* Dark overlay - lighter in center so cover shows through */}
       <div className="absolute inset-0 bg-charcoal/80 md:[mask-image:linear-gradient(to_right,_black_0%,_black_28%,_transparent_42%,_transparent_58%,_black_72%,_black_100%)]" />
       {/* Full-width gentle overlay for mobile readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/50 to-charcoal/60 md:hidden" />
@@ -32,7 +32,6 @@ export function CommerceSection() {
         {/* LEFT: Free Chapter */}
         <FadeIn className="flex flex-col items-start md:items-center md:text-center">
           <div className="mb-4 text-antique">
-            {/* Book icon */}
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
               <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
@@ -60,7 +59,7 @@ export function CommerceSection() {
           </div>
         </FadeIn>
 
-        {/* CENTER: transparent — shows background image (book cover) */}
+        {/* CENTER: transparent - shows background image */}
         <div className="hidden md:block" aria-hidden="true" />
 
         {/* RIGHT: Buy Ebook */}

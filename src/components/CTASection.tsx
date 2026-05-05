@@ -8,10 +8,10 @@ export function CTASection() {
       {/* Section 7 background image */}
       <Image
         src="/images/Section%207%20CTA.png"
-        alt="You've been invited into Briar Glen — the final call to enter"
+        alt="You have been invited into Briar Glen"
         fill
         sizes="100vw"
-        className="object-cover object-center"
+        className="object-cover object-center scale-[1.02]"
       />
       {/* Gradient overlay for text legibility */}
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/50 to-charcoal/70" />
