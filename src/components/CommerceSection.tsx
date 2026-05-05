@@ -26,11 +26,11 @@ export function CommerceSection() {
       {/* Full-width gentle overlay for mobile readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/50 to-charcoal/60 md:hidden" />
 
-      {/* Content grid */}
-      <div className="relative z-10 mx-auto grid min-h-[740px] max-w-7xl grid-cols-1 items-center gap-8 px-6 py-20 md:grid-cols-3 md:gap-6 md:px-10 lg:px-16">
+      {/* Content grid - gap-4 keeps columns tight so left button cannot reach center */}
+      <div className="relative z-10 mx-auto grid min-h-[740px] max-w-7xl grid-cols-1 items-center gap-8 px-6 py-20 md:grid-cols-3 md:gap-4 md:px-10 lg:px-16">
 
-        {/* LEFT: Free Chapter */}
-        <FadeIn className="flex flex-col items-start md:items-center md:text-center">
+        {/* LEFT: Free Sample - overflow-hidden prevents any bleed into center column */}
+        <FadeIn className="flex flex-col items-start overflow-hidden md:items-center md:text-center">
           <div className="mb-4 text-antique">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -47,19 +47,20 @@ export function CommerceSection() {
             Read the first chapter and<br className="hidden md:block" />
             experience the mystery for yourself.
           </p>
-          <div className="mt-8">
+          {/* block w-full + max-w cap keeps button strictly inside the left column */}
+          <div className="mt-8 w-full">
             <a
               href={sampleUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block border border-antique/70 bg-antique/10 px-7 py-4 text-sm uppercase tracking-[0.2em] text-parchment transition hover:border-antique hover:bg-antique hover:text-charcoal"
+              className="block w-full border border-antique/70 bg-antique/10 px-5 py-4 text-center text-sm uppercase tracking-[0.2em] text-parchment transition hover:border-antique hover:bg-antique hover:text-charcoal md:mx-auto md:max-w-[200px]"
             >
               Read Free Sample
             </a>
           </div>
         </FadeIn>
 
-        {/* CENTER: transparent - shows background image */}
+        {/* CENTER: transparent - shows background image (book/tablet artwork) */}
         <div className="hidden md:block" aria-hidden="true" />
 
         {/* RIGHT: Buy Ebook */}

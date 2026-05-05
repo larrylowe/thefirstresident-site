@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Play, X } from "lucide-react";
 import { FadeIn } from "./FadeIn";
 
-const EMBED_URL = "https://www.youtube-nocookie.com/embed/1CNQZFo5_Yc";
+const EMBED_URL = "https://www.youtube.com/embed/1CNQZFo5_Yc";
 
 export function VideoSection() {
   const [showVideo, setShowVideo] = useState(false);

@@ -6,7 +6,7 @@ import { Play, X } from "lucide-react";
 import { FadeIn } from "./FadeIn";
 
 const sampleUrl = "/samples/first-resident-sample.pdf";
-const EMBED_URL = "https://www.youtube-nocookie.com/embed/1CNQZFo5_Yc";
+const EMBED_URL = "https://www.youtube.com/embed/1CNQZFo5_Yc";
 
 export function Hero() {
   const [showVideo, setShowVideo] = useState(false);

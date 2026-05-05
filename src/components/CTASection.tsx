@@ -19,7 +19,7 @@ export function CTASection() {
 
       {/* Content */}
       <div className="relative z-10 flex min-h-[420px] flex-col items-center justify-center px-6 py-20 text-center md:min-h-[480px]">
-        <FadeIn>
+        <FadeIn className="flex flex-col items-center">
           <h2 className="font-serif text-4xl font-semibold uppercase leading-[0.95] tracking-[0.06em] text-parchment sm:text-5xl md:text-6xl lg:text-7xl">
             You&rsquo;ve Been Invited<br />
             <span className="text-antique">into Briar Glen.</span>
@@ -27,13 +27,14 @@ export function CTASection() {
           <p className="mt-4 font-serif text-xl italic text-aged md:text-2xl">
             RSVP here.
           </p>
-          <div className="mx-auto my-7 flex items-center gap-4">
+          {/* Ornamental separator explicitly centered */}
+          <div className="my-7 flex w-full items-center justify-center gap-4">
             <div className="h-px w-16 bg-antique/50" />
             <div className="h-1.5 w-1.5 rotate-45 bg-antique/70" />
             <div className="h-px w-16 bg-antique/50" />
           </div>
           <div className="flex justify-center">
-            <BuyButton>Buy the Ebook</BuyButton>
+            <BuyButton>Let Me In</BuyButton>
           </div>
         </FadeIn>
       </div>
