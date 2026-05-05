@@ -27,14 +27,14 @@ export function CTASection() {
           <p className="mt-4 font-serif text-xl italic text-aged md:text-2xl">
             RSVP here.
           </p>
-          {/* Ornamental separator explicitly centered */}
+          {/* Ornamental separator */}
           <div className="my-7 flex w-full items-center justify-center gap-4">
             <div className="h-px w-16 bg-antique/50" />
             <div className="h-1.5 w-1.5 rotate-45 bg-antique/70" />
             <div className="h-px w-16 bg-antique/50" />
           </div>
           <div className="flex justify-center">
-            <BuyButton>Let Me In</BuyButton>
+            <BuyButton>Buy the Ebook</BuyButton>
           </div>
         </FadeIn>
       </div>
