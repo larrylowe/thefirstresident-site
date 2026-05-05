@@ -10,7 +10,7 @@ export const product = {
     "4.99",
   tagline: "Every House Has A First Resident. This One Never Left.",
   sampleUrl: process.env.NEXT_PUBLIC_SAMPLE_PDF || "/samples/first-resident-sample.pdf",
-  videoUrl: process.env.NEXT_PUBLIC_VIDEO_URL || "https://youtu.be/1CNQZFo5_Yc",
+  videoUrl: process.env.NEXT_PUBLIC_VIDEO_URL || "https://www.youtube.com/embed/pOdHt66Bue4",
 
   // Legacy image references kept for TypeScript compatibility with older unused components.
   // These files are no longer used by the live page. They can be manually deleted from
