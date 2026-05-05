@@ -13,6 +13,10 @@ export function CommerceSection() {
       className="relative overflow-hidden bg-charcoal"
       style={{ scrollMarginTop: "80px" }}
     >
+      {/* Stable anchor for #sample nav link */}
+      <span id="sample" aria-hidden="true" className="absolute top-0" />
+      {/* Stable anchor for #buy nav link */}
+      <span id="buy" aria-hidden="true" className="absolute top-0" />
       {/* Full-width background image — artwork lives in the center zone */}
       <Image
         src="/images/Section%204%20Commerce%20section.png"

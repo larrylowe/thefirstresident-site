@@ -4,6 +4,8 @@ import { FadeIn } from "./FadeIn";
 export function ChelseaSection() {
   return (
     <section id="chelsea" className="overflow-hidden bg-charcoal" style={{ scrollMarginTop: "80px" }}>
+      {/* Stable anchor for #mystery nav link */}
+      <span id="mystery" aria-hidden="true" className="absolute top-0" />
       <div className="grid grid-cols-1 md:grid-cols-[55fr_45fr]">
         {/* Image column */}
         <div className="relative h-[340px] md:h-auto md:min-h-[640px]">

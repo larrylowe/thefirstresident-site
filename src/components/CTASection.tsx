@@ -5,6 +5,8 @@ import { FadeIn } from "./FadeIn";
 export function CTASection() {
   return (
     <section id="cta" className="relative overflow-hidden bg-charcoal" style={{ scrollMarginTop: "80px" }}>
+      {/* Stable anchor for #stay-close nav link */}
+      <span id="stay-close" aria-hidden="true" className="absolute top-0" />
       {/* Section 7 background image */}
       <Image
         src="/images/Section%207%20CTA.png"
