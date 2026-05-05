@@ -10,7 +10,7 @@ const navLinks = [
   { href: sampleUrl, label: "Read a Sample", external: true },
   { href: "#chelsea", label: "The Mystery", external: false },
   { href: "#history", label: "History & Hauntings", external: false },
-  { href: "#archives", label: "Investigative Archives", external: false },
+  { href: "/archive", label: "Investigative Archives", external: false },
   { href: "#commerce", label: "Buy the Ebook", external: false },
   { href: "#cta", label: "Stay Close", external: false },
 ];

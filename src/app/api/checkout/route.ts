@@ -20,7 +20,7 @@ export async function POST() {
       allow_promotion_codes: true,
       line_items: [{ price: priceId, quantity: 1 }],
       // Stripe replaces {CHECKOUT_SESSION_ID} with the real session ID
-      success_url: `${siteUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${siteUrl}/archive/claim?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/`,
       metadata: {
         product: "the-first-resident-ebook",
