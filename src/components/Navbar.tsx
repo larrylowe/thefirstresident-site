@@ -9,13 +9,12 @@ import { Menu, X } from "lucide-react";
  * links by scrolling to the matching element without a full navigation.
  */
 const navLinks = [
-  { href: "/",            label: "Home",                   external: false },
-  { href: "/#sample",     label: "Read a Sample",          external: false },
-  { href: "/#mystery",    label: "The Mystery",            external: false },
-  { href: "/#history",    label: "History & Hauntings",    external: false },
-  { href: "/archive",     label: "Investigative Archives", external: false },
-  { href: "/#buy",        label: "Buy the Ebook",          external: false },
-  { href: "/#stay-close", label: "Stay Close",             external: false },
+  { href: "/",         label: "Home",                   external: false },
+  { href: "/#sample",  label: "Read a Sample",          external: false },
+  { href: "/#mystery", label: "The Mystery",            external: false },
+  { href: "/#history", label: "History & Hauntings",    external: false },
+  { href: "/archive",  label: "Investigative Archives", external: false },
+  { href: "/#buy",     label: "Buy the Ebook",          external: false },
 ];
 
 export function Navbar() {
@@ -34,7 +33,7 @@ export function Navbar() {
         </a>
 
         {/* Desktop nav links — tighter gap so they fit at 1280px */}
-        <div className="hidden items-center gap-4 xl:flex 2xl:gap-6">
+        <div className="hidden items-center gap-5 xl:flex 2xl:gap-7">
           {navLinks.map((link) => (
             <a
               key={link.label}
