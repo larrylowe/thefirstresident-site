@@ -151,11 +151,22 @@ export const timelineEntries: TimelineEntry[] = [
   },
   {
     number: 9,
-    year: "1969\u20131984",
+    year: "1983",
     title: "The Modern Record",
     summary:
-      "The property changes purpose, but scattered reports continue: falls, locked rooms, misplaced objects, and residents unsettled by what they cannot quite explain.",
+      "Daniel Whitmore reopens his father\u2019s unfinished Briar Glen files, beginning with a public interview that seems to close the door. The record suggests otherwise.",
     slug: "the-modern-record",
-    documents: [], // Phase II — documents pending
+    documents: [
+      {
+        label: "Document 1 of 2: Daniel Whitmore\u2019s Note",
+        src: "/images/archive-files/file-09a-daniel-whitmore-note.png",
+        alt: "Field File No. 09A, Daniel Whitmore\u2019s Note",
+      },
+      {
+        label: "Document 2 of 2: Missus Jenkins Interview, 1983",
+        src: "/images/archive-files/file-09b-jenkins-interview-1983.png",
+        alt: "The First Resident newspaper article, Witness Denies Anything Strange Happening, October 2, 1983",
+      },
+    ],
   },
 ];
