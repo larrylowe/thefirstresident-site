@@ -111,8 +111,8 @@ export function ArchiveFileModal({ entry, onClose }: Props) {
           </div>
         )}
 
-        {/* Scrollable body */}
-        <div className="flex-1 overflow-y-auto overscroll-contain px-6 py-6">
+        {/* Scrollable body — no horizontal padding so image viewports reach full width */}
+        <div className="flex-1 overflow-y-auto overscroll-contain py-6">
           {hasDocs ? (
             <div className="flex flex-col gap-10">
               {entry.documents.map((doc, i) => {
@@ -120,8 +120,8 @@ export function ArchiveFileModal({ entry, onClose }: Props) {
                 return (
                   <section key={i}>
 
-                    {/* Label + New Tab */}
-                    <div className="mb-3 flex items-center gap-3">
+                    {/* Label + New Tab — padded normally */}
+                    <div className="mb-3 flex items-center gap-3 px-6">
                       <div className="h-px w-4 shrink-0 bg-antique/45" />
                       <p className="shrink-0 text-[10px] uppercase tracking-[0.22em] text-antique/75">
                         {doc.label}
@@ -138,24 +138,28 @@ export function ArchiveFileModal({ entry, onClose }: Props) {
                     </div>
 
                     {/*
-                      Viewport: clips height, scrolls both axes.
-                      Inner wrapper: sets the actual rendered width so the
-                      scroll container knows how wide the content is.
-                      Image: fills 100% of the inner wrapper width.
+                      Viewport: full modal width (no px-6 parent), so overflow-auto
+                      correctly triggers a horizontal scrollbar when the inner
+                      wrapper exceeds 100% of the modal width at zoom > 1.
                     */}
                     <div
                       style={{
                         width: "100%",
                         maxHeight: "70vh",
-                        overflow: "auto",
+                        overflowX: "auto",
+                        overflowY: "auto",
                         border: "1px solid rgba(184,142,74,0.15)",
                         background: "rgba(0,0,0,0.3)",
+                        boxSizing: "border-box",
                       }}
                     >
+                      {/* Inner wrapper grows with zoom — this is what the
+                          scroll container measures to decide scrollbar visibility */}
                       <div
                         style={{
-                          width: `${zoom * 100}%`,
-                          minWidth: `${zoom * 100}%`,
+                          width: zoom <= 1 ? "100%" : `${zoom * 100}%`,
+                          minWidth: zoom <= 1 ? "100%" : `${zoom * 100}%`,
+                          boxSizing: "border-box",
                         }}
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -176,12 +180,12 @@ export function ArchiveFileModal({ entry, onClose }: Props) {
                 );
               })}
 
-              <p className="text-[10px] uppercase tracking-[0.2em] text-antique/30">
+              <p className="px-6 text-[10px] uppercase tracking-[0.2em] text-antique/30">
                 Record {entry.number.toString().padStart(2, "0")} of 09 — Phase I
               </p>
             </div>
           ) : (
-            <>
+            <div className="px-6">
               <div className="mb-5 flex items-center gap-3">
                 <div className="h-px w-6 bg-antique/40" />
                 <div className="h-1 w-1 rotate-45 bg-antique/50" />
@@ -200,7 +204,7 @@ export function ArchiveFileModal({ entry, onClose }: Props) {
               <p className="mt-5 text-[10px] uppercase tracking-[0.2em] text-antique/40">
                 Record {entry.number.toString().padStart(2, "0")} of 09 — Phase I
               </p>
-            </>
+            </div>
           )}
         </div>
 
