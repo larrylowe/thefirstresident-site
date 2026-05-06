@@ -120,56 +120,61 @@ export function ArchiveFileModal({ entry, onClose }: Props) {
                 return (
                   <section key={i}>
 
-                    {/* Label row */}
+                    {/* Label + New Tab */}
                     <div className="mb-3 flex items-center gap-3">
                       <div className="h-px w-4 shrink-0 bg-antique/45" />
                       <p className="shrink-0 text-[10px] uppercase tracking-[0.22em] text-antique/75">
                         {doc.label}
                       </p>
                       <div className="h-px flex-1 bg-antique/20" />
-                      <a href={src} target="_blank" rel="noopener noreferrer"
-                        className="ml-2 flex shrink-0 items-center gap-1 text-[10px] uppercase tracking-[0.16em] text-antique/50 transition hover:text-antique focus:outline-none">
+                      <a
+                        href={src}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-2 flex shrink-0 items-center gap-1 text-[10px] uppercase tracking-[0.16em] text-antique/50 transition hover:text-antique focus:outline-none"
+                      >
                         <ExternalLink size={11} /> New tab
                       </a>
                     </div>
 
-                    {/* Debug: show exact src value */}
-                    <p className="mb-2 font-mono text-[10px] text-antique/40 break-all">
-                      {JSON.stringify(src)}
-                    </p>
-
-                    {/* Image viewport */}
-                    <div style={{ overflowX: "auto", overflowY: "auto", maxHeight: "70vh", width: "100%" }}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={src}
-                        alt={doc.alt}
+                    {/*
+                      Viewport: clips height, scrolls both axes.
+                      Inner wrapper: sets the actual rendered width so the
+                      scroll container knows how wide the content is.
+                      Image: fills 100% of the inner wrapper width.
+                    */}
+                    <div
+                      style={{
+                        width: "100%",
+                        maxHeight: "70vh",
+                        overflow: "auto",
+                        border: "1px solid rgba(184,142,74,0.15)",
+                        background: "rgba(0,0,0,0.3)",
+                      }}
+                    >
+                      <div
                         style={{
-                          display: "block",
                           width: `${zoom * 100}%`,
-                          maxWidth: "none",
-                          height: "auto",
-                          margin: "0 auto",
+                          minWidth: `${zoom * 100}%`,
                         }}
-                      />
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={src}
+                          alt={doc.alt}
+                          style={{
+                            display: "block",
+                            width: "100%",
+                            height: "auto",
+                            maxWidth: "none",
+                          }}
+                        />
+                      </div>
                     </div>
 
                   </section>
                 );
               })}
-
-              {/* Hardcoded test image — remove after confirming images render */}
-              <div style={{ marginTop: "2rem", borderTop: "1px solid rgba(184,142,74,0.2)", paddingTop: "1rem" }}>
-                <p className="mb-2 text-[10px] uppercase tracking-[0.2em] text-antique/40">
-                  Debug: hardcoded test image
-                </p>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/images/archive-files/file-01-companion-ordered.png"
-                  alt="Hardcoded File 01 test"
-                  style={{ width: "200px", height: "auto", display: "block" }}
-                />
-              </div>
 
               <p className="text-[10px] uppercase tracking-[0.2em] text-antique/30">
                 Record {entry.number.toString().padStart(2, "0")} of 09 — Phase I
