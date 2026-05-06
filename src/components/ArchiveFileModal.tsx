@@ -2,47 +2,65 @@
 
 import { useEffect, useRef, useState } from "react";
 import { X, ZoomIn, ZoomOut, RotateCcw, ExternalLink } from "lucide-react";
-import type { TimelineEntry } from "@/data/archiveTimeline";
+import type { TimelineEntry, ArchiveDocument } from "@/data/archiveTimeline";
 
-// ─── Small component: renders one archive document image with error handling ──
-function ArchiveDocumentImage({
-  src,
-  alt,
-  zoom,
-}: {
-  src: string;
-  alt: string;
-  zoom: number;
-}) {
-  const [errored, setErrored] = useState(false);
+// ─── Constants ────────────────────────────────────────────────────────────────
+const ZOOM_MIN     = 0.5;
+const ZOOM_MAX     = 2.5;
+const ZOOM_STEP    = 0.25;
+const ZOOM_DEFAULT = 1;
 
-  if (errored) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-2 border border-antique/20 bg-charcoal/60 px-6 py-10 text-center">
-        <p className="text-[11px] uppercase tracking-[0.2em] text-antique/60">
-          Image could not be loaded:
-        </p>
-        <p className="break-all font-mono text-[11px] text-aged/50">{src}</p>
-      </div>
-    );
-  }
+// ─── Single document image ────────────────────────────────────────────────────
+//
+// Keyed by src at the call site (key={doc.src}) so React fully unmounts and
+// remounts this component whenever the image source changes.  That guarantees
+// errored state is always fresh — no stale error from a previous file can bleed
+// through.
+//
+function DocImage({ doc, zoom }: { doc: ArchiveDocument; zoom: number }) {
+  const [errored, setErrored]   = useState(false);
+  const [loaded,  setLoaded]    = useState(false);
+
+  // Belt-and-suspenders reset if the same component instance somehow receives
+  // a new src (shouldn't happen given key={doc.src}, but defensive is fine).
+  useEffect(() => {
+    setErrored(false);
+    setLoaded(false);
+  }, [doc.src]);
 
   return (
-    /* Scroll container — horizontal scroll appears only when zoomed beyond width */
-    <div className="overflow-auto border border-antique/15 bg-charcoal/50">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={alt}
-        onError={() => setErrored(true)}
-        style={{
-          width: `${zoom * 100}%`,
-          maxWidth: "none",
-          height: "auto",
-          display: "block",
-          margin: "0 auto",
-        }}
-      />
+    /* Viewport: clips height, allows both axes to scroll when zoomed */
+    <div
+      className="overflow-auto border border-antique/15 bg-charcoal/50"
+      style={{ maxHeight: "70vh", width: "100%" }}
+    >
+      {errored ? (
+        <div className="flex flex-col items-center justify-center gap-2 px-6 py-10 text-center">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-antique/60">
+            Image could not be loaded:
+          </p>
+          <p className="break-all font-mono text-[11px] text-aged/50">{doc.src}</p>
+        </div>
+      ) : (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img
+          src={doc.src}
+          alt={doc.alt}
+          onLoad={()  => { setLoaded(true);  setErrored(false); }}
+          onError={() => { setErrored(true); setLoaded(false);  }}
+          style={{
+            display:    "block",
+            width:      `${zoom * 100}%`,
+            maxWidth:   "none",
+            height:     "auto",
+            margin:     "0 auto",
+            // Keep the image invisible until it loads so there's no flash of
+            // broken layout — but do not set display:none (that prevents load).
+            opacity: loaded ? 1 : 0,
+            transition: "opacity 0.2s ease",
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -53,42 +71,35 @@ interface ArchiveFileModalProps {
   onClose: () => void;
 }
 
-const ZOOM_MIN  = 0.5;
-const ZOOM_MAX  = 2.5;
-const ZOOM_STEP = 0.25;
-const ZOOM_DEFAULT = 1;
-
 export function ArchiveFileModal({ entry, onClose }: ArchiveFileModalProps) {
   const [zoom, setZoom] = useState(ZOOM_DEFAULT);
 
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const overlayRef     = useRef<HTMLDivElement>(null);
 
-  const hasDocs = entry.documents && entry.documents.length > 0;
+  const hasDocs = Array.isArray(entry.documents) && entry.documents.length > 0;
 
-  const zoomIn    = () => setZoom(z => Math.min(ZOOM_MAX,  Math.round((z + ZOOM_STEP) * 100) / 100));
-  const zoomOut   = () => setZoom(z => Math.max(ZOOM_MIN,  Math.round((z - ZOOM_STEP) * 100) / 100));
+  const zoomIn    = () => setZoom(z => Math.min(ZOOM_MAX,  parseFloat((z + ZOOM_STEP).toFixed(2))));
+  const zoomOut   = () => setZoom(z => Math.max(ZOOM_MIN,  parseFloat((z - ZOOM_STEP).toFixed(2))));
   const zoomReset = () => setZoom(ZOOM_DEFAULT);
 
-  // Reset zoom when a new entry opens
-  useEffect(() => {
-    setZoom(ZOOM_DEFAULT);
-  }, [entry.slug]);
+  // Reset zoom when file changes
+  useEffect(() => { setZoom(ZOOM_DEFAULT); }, [entry.slug]);
 
   // ESC + focus trap
   useEffect(() => {
     closeButtonRef.current?.focus();
 
-    function handleKeyDown(e: KeyboardEvent) {
+    function onKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") { onClose(); return; }
       if (e.key !== "Tab") return;
 
-      const focusable = overlayRef.current?.querySelectorAll<HTMLElement>(
+      const els = overlayRef.current?.querySelectorAll<HTMLElement>(
         'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
-      if (!focusable || focusable.length === 0) return;
-      const first = focusable[0];
-      const last  = focusable[focusable.length - 1];
+      if (!els || els.length === 0) return;
+      const first = els[0];
+      const last  = els[els.length - 1];
       if (e.shiftKey) {
         if (document.activeElement === first) { e.preventDefault(); last.focus(); }
       } else {
@@ -96,11 +107,11 @@ export function ArchiveFileModal({ entry, onClose }: ArchiveFileModalProps) {
       }
     }
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [onClose]);
 
-  // Lock body scroll
+  // Lock body scroll while modal is open
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => { document.body.style.overflow = ""; };
@@ -118,12 +129,12 @@ export function ArchiveFileModal({ entry, onClose }: ArchiveFileModalProps) {
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
       <div
-        className="relative flex w-full max-w-2xl flex-col border border-antique/30 bg-charcoal shadow-2xl my-auto"
+        className="relative my-auto flex w-full max-w-2xl flex-col border border-antique/30 bg-charcoal shadow-2xl"
         style={{ maxHeight: "calc(100dvh - 80px)" }}
         onClick={(e) => e.stopPropagation()}
       >
 
-        {/* ── Sticky header ─────────────────────────────────── */}
+        {/* ── Sticky header ─────────────────────────────── */}
         <div className="flex shrink-0 items-start justify-between border-b border-antique/20 px-6 py-5">
           <div>
             <p className="text-[10px] uppercase tracking-[0.28em] text-antique">
@@ -146,7 +157,7 @@ export function ArchiveFileModal({ entry, onClose }: ArchiveFileModalProps) {
           </button>
         </div>
 
-        {/* ── Zoom toolbar (only shown when there are documents) ── */}
+        {/* ── Zoom toolbar ──────────────────────────────── */}
         {hasDocs && (
           <div className="flex shrink-0 items-center gap-2 border-b border-antique/15 bg-charcoal/60 px-6 py-3">
             <button
@@ -167,7 +178,6 @@ export function ArchiveFileModal({ entry, onClose }: ArchiveFileModalProps) {
               <ZoomIn size={13} />
             </button>
 
-            {/* Zoom level readout */}
             <span className="min-w-[3rem] text-center text-[11px] tabular-nums text-antique/60">
               {zoomPct}%
             </span>
@@ -182,25 +192,27 @@ export function ArchiveFileModal({ entry, onClose }: ArchiveFileModalProps) {
               Reset
             </button>
 
-            <div className="ml-auto text-[10px] uppercase tracking-[0.16em] text-antique/35">
+            <span className="ml-auto text-[10px] uppercase tracking-[0.16em] text-antique/35">
               {entry.documents.length === 1
                 ? "1 Document"
                 : `${entry.documents.length} Documents`}
-            </div>
+            </span>
           </div>
         )}
 
-        {/* ── Scrollable body ───────────────────────────────── */}
+        {/* ── Scrollable body ───────────────────────────── */}
         <div className="flex-1 overflow-y-auto overscroll-contain px-6 py-6">
           {hasDocs ? (
             <div className="flex flex-col gap-10">
-              {entry.documents.map((doc, i) => (
-                <div key={i} className="flex flex-col gap-3">
+              {entry.documents.map((doc) => (
+                // key={doc.src} forces full remount of DocImage when src changes,
+                // guaranteeing no stale error state persists between file opens.
+                <div key={doc.src} className="flex flex-col gap-3">
 
-                  {/* Document label + open-in-new-tab link */}
+                  {/* Label row + Open in New Tab */}
                   <div className="flex items-center gap-3">
-                    <div className="h-px w-4 bg-antique/45 shrink-0" />
-                    <p className="text-[10px] uppercase tracking-[0.22em] text-antique/75 shrink-0">
+                    <div className="h-px w-4 shrink-0 bg-antique/45" />
+                    <p className="shrink-0 text-[10px] uppercase tracking-[0.22em] text-antique/75">
                       {doc.label}
                     </p>
                     <div className="h-px flex-1 bg-antique/20" />
@@ -216,12 +228,9 @@ export function ArchiveFileModal({ entry, onClose }: ArchiveFileModalProps) {
                     </a>
                   </div>
 
-                  {/* Image with zoom + error handling */}
-                  <ArchiveDocumentImage
-                    src={doc.src}
-                    alt={doc.alt}
-                    zoom={zoom}
-                  />
+                  {/* Image — keyed by src so state is always fresh */}
+                  <DocImage key={doc.src} doc={doc} zoom={zoom} />
+
                 </div>
               ))}
 
@@ -230,7 +239,7 @@ export function ArchiveFileModal({ entry, onClose }: ArchiveFileModalProps) {
               </p>
             </div>
           ) : (
-            /* Placeholder for record 9 — no images yet */
+            /* Record 9 — no documents yet */
             <>
               <div className="mb-5 flex items-center gap-3">
                 <div className="h-px w-6 bg-antique/40" />
@@ -255,7 +264,7 @@ export function ArchiveFileModal({ entry, onClose }: ArchiveFileModalProps) {
           )}
         </div>
 
-        {/* ── Sticky footer ─────────────────────────────────── */}
+        {/* ── Sticky footer ─────────────────────────────── */}
         <div className="shrink-0 border-t border-antique/20 px-6 py-5">
           <button
             onClick={onClose}
