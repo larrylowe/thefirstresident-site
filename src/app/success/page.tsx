@@ -1,15 +1,13 @@
 /**
  * /success?session_id=cs_xxx
  *
- * Post-purchase landing page. Reads the Stripe session ID from the URL and
- * shows the download button that initiates the two-step secure download flow.
- *
- * No Stripe API calls happen here — verification is deferred to /api/download-token.
+ * Post-purchase landing page. Verifies Stripe payment server-side before
+ * showing the download button. Unpaid or invalid sessions see an error message.
  */
 
 import Link from "next/link";
+import { stripe } from "@/lib/stripe";
 
-// Next.js 15+ passes searchParams as a Promise in server components
 type Props = {
   searchParams: Promise<{ session_id?: string }>;
 };
@@ -18,11 +16,21 @@ export default async function SuccessPage({ searchParams }: Props) {
   const params = await searchParams;
   const sessionId = params.session_id;
 
+  let isPaid = false;
+
+  if (sessionId) {
+    try {
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      isPaid = session.payment_status === "paid";
+    } catch {
+      isPaid = false;
+    }
+  }
+
   return (
     <main className="min-h-screen bg-charcoal px-5 py-32 text-parchment">
       <div className="mx-auto max-w-2xl rounded-sm border border-antique/25 bg-moss p-10">
 
-        {/* Header */}
         <p className="text-sm uppercase tracking-[0.28em] text-antique">
           Purchase Complete
         </p>
@@ -37,10 +45,9 @@ export default async function SuccessPage({ searchParams }: Props) {
           Your secure download link is available for 72 hours and allows up to 3 downloads.
         </p>
 
-        {/* Download button — links to /api/download-token which validates and redirects */}
-        {sessionId ? (
-          <a
-            href={`/api/download-token?session_id=${encodeURIComponent(sessionId)}`}
+        {isPaid ? (
+          
+            href={`/api/download-token?session_id=${encodeURIComponent(sessionId!)}`}
             className="mt-8 inline-flex rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
           >
             Download the e-book
@@ -48,25 +55,24 @@ export default async function SuccessPage({ searchParams }: Props) {
         ) : (
           <div className="mt-8 rounded-sm border border-antique/25 bg-charcoal/50 p-6">
             <p className="text-aged">
-              We could not find your purchase session. If you completed a purchase,
-              please check your confirmation email or contact{" "}
-              <a
-                href="mailto:partn54digital@gmail.com"
+              Payment has not been completed yet. If you believe this is an
+              error, please contact{" "}
+              
+                href="mailto:support@thefirstresident.com"
                 className="text-antique underline hover:text-parchment"
               >
-                partn54digital@gmail.com
+                support@thefirstresident.com
               </a>{" "}
               with your receipt.
             </p>
           </div>
         )}
 
-        {/* Share nudge */}
         <div className="mt-12 border-t border-antique/20 pt-8">
           <p className="text-sm uppercase tracking-[0.18em] text-antique">
             Please share the website, not the file
           </p>
-          <a
+          
             href="https://www.thefirstresident.com"
             className="mt-2 inline-block font-serif text-xl text-parchment underline hover:text-antique"
           >
@@ -80,14 +86,13 @@ export default async function SuccessPage({ searchParams }: Props) {
           </p>
         </div>
 
-        {/* Support & navigation */}
         <p className="mt-8 text-sm text-aged/75">
           Trouble downloading?{" "}
-          <a
-            href="mailto:partn54digital@gmail.com"
+          
+            href="mailto:support@thefirstresident.com"
             className="text-antique underline hover:text-parchment"
           >
-            Contact partn54digital@gmail.com
+            Contact support@thefirstresident.com
           </a>{" "}
           with your receipt and we will help.
         </p>

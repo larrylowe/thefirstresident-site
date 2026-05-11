@@ -87,32 +87,44 @@ export async function POST(request: NextRequest) {
       if (verified) break;
     }
 
-    // Fallback: if PaymentIntent search yielded nothing, try listing recent
-    // Checkout Sessions by customer email directly (works for newer Stripe SDK)
+ // Fallback: scan all Checkout Sessions by customer email (paginated)
     if (!verified) {
-      const sessionSearch = await stripe.checkout.sessions.list({
-        limit: 100,
-        expand: ["data.line_items"],
-      });
+      let hasMore = true;
+      let startingAfter: string | undefined = undefined;
 
-      for (const session of sessionSearch.data) {
-        if (session.payment_status !== "paid") continue;
-        const sessionEmail = (
-          session.customer_details?.email ?? ""
-        ).toLowerCase();
-        if (sessionEmail !== email) continue;
+      while (hasMore && !verified) {
+        const sessionSearch = await stripe.checkout.sessions.list({
+          limit: 100,
+          ...(startingAfter ? { starting_after: startingAfter } : {}),
+          expand: ["data.line_items"],
+        });
 
-        if (expectedPriceId) {
-          const hasPriceMatch = session.line_items?.data?.some(
-            (item) => item.price?.id === expectedPriceId
-          );
-          if (hasPriceMatch) {
+        for (const session of sessionSearch.data) {
+          if (session.payment_status !== "paid") continue;
+          const sessionEmail = (
+            session.customer_details?.email ?? ""
+          ).toLowerCase();
+          if (sessionEmail !== email) continue;
+
+          if (expectedPriceId) {
+            const hasPriceMatch = session.line_items?.data?.some(
+              (item) => item.price?.id === expectedPriceId
+            );
+            if (hasPriceMatch) {
+              verified = true;
+              break;
+            }
+          } else {
             verified = true;
             break;
           }
+        }
+
+        hasMore = sessionSearch.has_more;
+        if (sessionSearch.data.length > 0) {
+          startingAfter = sessionSearch.data[sessionSearch.data.length - 1].id;
         } else {
-          verified = true;
-          break;
+          hasMore = false;
         }
       }
     }
