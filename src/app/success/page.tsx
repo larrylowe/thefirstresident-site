@@ -1,4 +1,4 @@
-/**
+﻿/**
  * /success?session_id=cs_xxx
  *
  * Post-purchase landing page. Verifies Stripe payment server-side before
@@ -47,7 +47,7 @@ export default async function SuccessPage({ searchParams }: Props) {
 
         {isPaid ? (
           
-            href={`/api/download-token?session_id=${encodeURIComponent(sessionId!)}`}
+            href={"/api/download-token?session_id=" + encodeURIComponent(sessionId!)}
             className="mt-8 inline-flex rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
           >
             Download the e-book
@@ -82,7 +82,7 @@ export default async function SuccessPage({ searchParams }: Props) {
             For updates, artwork, story notes, and future releases:
           </p>
           <p className="mt-1 text-sm tracking-wide text-antique">
-            Instagram and Facebook — @thefirstresident
+            Instagram and Facebook - @thefirstresident
           </p>
         </div>
 
