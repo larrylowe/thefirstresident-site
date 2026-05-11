@@ -1,4 +1,4 @@
-﻿/**
+/**
  * /success?session_id=cs_xxx
  *
  * Post-purchase landing page. Verifies Stripe payment server-side before
@@ -11,6 +11,10 @@ import { stripe } from "@/lib/stripe";
 type Props = {
   searchParams: Promise<{ session_id?: string }>;
 };
+
+function downloadHref(sessionId: string): string {
+  return "/api/download-token?session_id=" + encodeURIComponent(sessionId);
+}
 
 export default async function SuccessPage({ searchParams }: Props) {
   const params = await searchParams;
@@ -45,9 +49,9 @@ export default async function SuccessPage({ searchParams }: Props) {
           Your secure download link is available for 72 hours and allows up to 3 downloads.
         </p>
 
-        {isPaid ? (
-          
-            href={"/api/download-token?session_id=" + encodeURIComponent(sessionId!)}
+        {isPaid && sessionId ? (
+          <a
+            href={downloadHref(sessionId)}
             className="mt-8 inline-flex rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
           >
             Download the e-book
@@ -57,7 +61,7 @@ export default async function SuccessPage({ searchParams }: Props) {
             <p className="text-aged">
               Payment has not been completed yet. If you believe this is an
               error, please contact{" "}
-              
+              <a
                 href="mailto:support@thefirstresident.com"
                 className="text-antique underline hover:text-parchment"
               >
@@ -72,7 +76,7 @@ export default async function SuccessPage({ searchParams }: Props) {
           <p className="text-sm uppercase tracking-[0.18em] text-antique">
             Please share the website, not the file
           </p>
-          
+          <a
             href="https://www.thefirstresident.com"
             className="mt-2 inline-block font-serif text-xl text-parchment underline hover:text-antique"
           >
@@ -88,7 +92,7 @@ export default async function SuccessPage({ searchParams }: Props) {
 
         <p className="mt-8 text-sm text-aged/75">
           Trouble downloading?{" "}
-          
+          <a
             href="mailto:support@thefirstresident.com"
             className="text-antique underline hover:text-parchment"
           >
