@@ -13,6 +13,7 @@ import { verifyArchiveToken, ARCHIVE_COOKIE_NAME } from "@/lib/archiveAccess";
 import { ArchiveGate } from "@/components/ArchiveGate";
 import { ArchiveAccess } from "@/components/ArchiveDoor";
 import { Navbar } from "@/components/Navbar";
+import { getEbookPrice } from "@/lib/price";
 
 export const metadata: Metadata = {
   title: "Briar Glen Archive | The First Resident",
@@ -27,11 +28,12 @@ export default async function ArchivePage() {
   const cookieStore = await cookies();
   const token = cookieStore.get(ARCHIVE_COOKIE_NAME)?.value;
   const hasAccess = verifyArchiveToken(token);
+  const price = await getEbookPrice();
 
   return (
     <main>
-      <Navbar />
-      {hasAccess ? <ArchiveAccess /> : <ArchiveGate />}
+      <Navbar price={price} />
+      {hasAccess ? <ArchiveAccess /> : <ArchiveGate price={price} />}
     </main>
   );
 }

@@ -2,99 +2,82 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Play, X } from "lucide-react";
+import { Play } from "lucide-react";
+import { BuyButton } from "./BuyButton";
 import { FadeIn } from "./FadeIn";
 
 const EMBED_URL = "https://www.youtube.com/embed/pOdHt66Bue4";
 
-export function VideoSection() {
-  const [showVideo, setShowVideo] = useState(false);
+/** Emma (as she appears at Briar Glen Residence in 1984), paired with the trailer. */
+export function VideoSection({ price }: { price: string }) {
+  const [playing, setPlaying] = useState(false);
 
   return (
-    <section id="video" className="overflow-hidden bg-ink" style={{ scrollMarginTop: "80px" }}>
-      <div className="grid grid-cols-1 md:grid-cols-[55fr_45fr]">
+    <section id="emma" className="relative overflow-hidden border-t border-antique/10 bg-[#0d0b09]" style={{ scrollMarginTop: "80px" }}>
+      {/* Stable anchors for #trailer and older #video links */}
+      <span id="trailer" aria-hidden="true" className="absolute top-0" />
+      <span id="video" aria-hidden="true" className="absolute top-0" />
+      <div className="mx-auto grid max-w-[1240px] grid-cols-1 gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-12 md:px-12 md:py-24 lg:px-16">
 
-        {/* Image / embed column */}
-        <div className="group relative h-[340px] md:h-auto md:min-h-[640px] overflow-hidden">
-          {showVideo ? (
-            /* Inline YouTube nocookie embed */
-            <div className="relative h-full w-full bg-charcoal">
+        {/* Text column — after the player on mobile */}
+        <FadeIn className="order-2 lg:order-1">
+          <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-antique">Emma</p>
+          <h2 className="mt-5 font-serif text-4xl font-normal leading-tight text-parchment md:text-5xl lg:text-[56px]">
+            She&rsquo;s been waiting.
+          </h2>
+          <blockquote className="mt-6 font-serif text-2xl italic leading-snug text-antique md:text-[26px]">
+            &ldquo;Emma was a resident at Briar Glen in the same way the others were, except Emma was a doll.&rdquo;
+          </blockquote>
+          <p className="mt-5 font-serif text-xl leading-relaxed text-aged">
+            She was always somewhere, and no one ever explained why.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <BuyButton className="px-6 text-xs">Buy the Ebook · ${price}</BuyButton>
+            <a
+              href="#prelude"
+              className="inline-flex items-center justify-center border border-antique/80 px-6 py-4 text-xs font-medium uppercase tracking-[0.18em] text-parchment transition hover:bg-antique hover:text-charcoal"
+            >
+              Read Free
+            </a>
+          </div>
+        </FadeIn>
+
+        {/* Trailer — thumbnail first, the YouTube player loads only on tap */}
+        <FadeIn delay={0.1} className="order-1 lg:order-2">
+          <div className="relative aspect-video w-full overflow-hidden border border-antique/25 bg-black shadow-[0_24px_60px_rgba(0,0,0,0.6)]">
+            {playing ? (
               <iframe
-                src={`${EMBED_URL}?autoplay=1&rel=0&modestbranding=1`}
-                title="The First Resident of Briar Glen — Video Synopsis"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                src={`${EMBED_URL}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+                title="The First Resident of Briar Glen trailer"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
                 className="absolute inset-0 h-full w-full border-0"
               />
-              {/* Close button */}
+            ) : (
               <button
-                onClick={() => setShowVideo(false)}
-                aria-label="Close video"
-                className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center bg-charcoal/80 text-parchment transition hover:bg-charcoal hover:text-antique"
+                onClick={() => setPlaying(true)}
+                aria-label="Play the trailer"
+                className="group absolute inset-0 block h-full w-full cursor-pointer"
               >
-                <X size={18} />
+                <Image
+                  src="/images/trailer-thumbnail.jpg"
+                  alt="Trailer still: Briar Glen in a storm, Emma in the lit window, Chelsea outside. She's been waiting."
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 60vw"
+                  className="object-cover"
+                />
+                <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-antique/90 shadow-lg transition group-hover:scale-105 group-hover:bg-antique md:h-20 md:w-20">
+                  <Play className="h-7 w-7 translate-x-0.5 fill-charcoal text-charcoal md:h-8 md:w-8" />
+                </span>
               </button>
-            </div>
-          ) : (
-            /* Thumbnail with play button — click to reveal embed */
-            <button
-              onClick={() => setShowVideo(true)}
-              aria-label="Play the video synopsis inside the page"
-              className="group relative block h-full w-full cursor-pointer"
-            >
-              <Image
-                src="/images/Section%203%20laptop%20and%20wine.png"
-                alt="A cinematic still — a laptop screen glowing in a candlelit room beside a glass of wine"
-                fill
-                sizes="(max-width: 768px) 100vw, 55vw"
-                className="object-cover object-center transition duration-700 group-hover:scale-[1.02]"
-              />
-              {/* Desktop blend */}
-              <div className="absolute inset-0 hidden bg-gradient-to-r from-transparent via-transparent to-ink/80 md:block" />
-              {/* Mobile fade */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-ink md:hidden" />
-              {/* Play icon */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="flex h-16 w-16 items-center justify-center border border-antique/60 bg-charcoal/60 transition duration-300 group-hover:border-antique group-hover:bg-charcoal/80">
-                  <Play className="h-7 w-7 fill-antique text-antique translate-x-0.5" />
-                </div>
-              </div>
-            </button>
-          )}
-        </div>
-
-        {/* Text column */}
-        <div className="flex items-center bg-ink px-8 py-14 md:px-12 lg:px-16 xl:px-20">
-          <FadeIn delay={0.1} className="max-w-sm">
-            <p className="text-[11px] uppercase tracking-[0.3em] text-antique">
-              Step Inside the Story
-            </p>
-            <div className="my-4 flex items-center gap-3">
-              <div className="h-px w-8 bg-antique/50" />
-              <div className="h-1 w-1 rotate-45 bg-antique/60" />
-              <div className="h-px w-8 bg-antique/50" />
-            </div>
-            <h2 className="font-serif text-3xl font-semibold uppercase leading-[1.0] tracking-[0.04em] text-parchment md:text-4xl lg:text-5xl">
-              Watch the<br />Video Synopsis
-            </h2>
-            <div className="my-6 h-px w-10 bg-antique/40" />
-            <p className="text-sm leading-8 text-aged md:text-base">
-              Experience the world of Briar Glen in a cinematic
-              synopsis. Before you read, watch the story
-              come to life.
-            </p>
-            <div className="mt-8">
-              <button
-                onClick={() => setShowVideo(true)}
-                className="inline-flex items-center gap-3 border border-antique/70 px-7 py-4 text-sm uppercase tracking-[0.2em] text-parchment transition hover:border-antique hover:bg-antique hover:text-charcoal"
-              >
-                <Play className="h-4 w-4 fill-current" />
-                Watch the Synopsis
-              </button>
-            </div>
-          </FadeIn>
-        </div>
-
+            )}
+          </div>
+          <div className="mt-3 flex justify-between text-[10px] uppercase tracking-[0.22em] text-aged/60">
+            <span>Watch the Trailer</span>
+            <span>Plays in page</span>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );

@@ -4,19 +4,20 @@ const sampleUrl = "/samples/first-resident-sample.pdf";
 
 const footerLinks = [
   { href: "#hero", label: "Home", external: false },
-  { href: sampleUrl, label: "Read a Sample", external: true },
-  { href: "#chelsea", label: "The Mystery", external: false },
-  { href: "#history", label: "History & Hauntings", external: false },
-  { href: "/archive", label: "Investigative Archives", external: false },
-  { href: "#commerce", label: "Buy the Ebook", external: false },
-  { href: "#cta", label: "Stay Close", external: false },
+  { href: "#story", label: "The Story", external: false },
+  { href: "#trailer", label: "Trailer", external: false },
+  { href: sampleUrl, label: "Read the Prelude", external: true },
+  { href: "#history", label: "History", external: false },
+  { href: "/archive", label: "Archive", external: false },
+  { href: "#author", label: "From the Author", external: false },
+  { href: "/buy", label: "Buy the Ebook", external: false },
   { href: "/privacy", label: "Terms of Use", external: false },
   { href: "/privacy", label: "Privacy", external: false },
 ];
 
 export function Footer() {
   return (
-    <footer id="footer" className="border-t border-antique/20 bg-charcoal pt-14 pb-10">
+    <footer id="footer" className="border-t border-antique/20 bg-charcoal pt-14 pb-24 md:pb-10">
       <div className="mx-auto max-w-screen-xl px-6 md:px-10">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-[1fr_1fr_auto]">
 
@@ -44,7 +45,7 @@ export function Footer() {
                     >
                       {link.label}
                     </a>
-                  ) : link.href.startsWith("/") ? (
+                  ) : link.href.startsWith("/") && link.href !== "/buy" ? (
                     <Link
                       href={link.href}
                       className="text-[11px] uppercase tracking-[0.16em] text-aged/70 transition hover:text-antique"

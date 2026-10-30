@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { BuyButton } from "./BuyButton";
 
-export function ArchiveGate() {
+export function ArchiveGate({ price }: { price: string }) {
   const [email, setEmail] = useState("");
   const [restoreStatus, setRestoreStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -97,11 +97,11 @@ export function ArchiveGate() {
           <p className="mt-6 text-sm leading-7 text-aged/80">
             Archive access is included with purchase of the complete ebook.
           </p>
-          <p className="mt-1 text-sm text-antique">Launch access: $4.99</p>
+          <p className="mt-1 text-sm text-antique">Ebook: ${price}</p>
 
           {/* Primary CTA */}
           <div className="mt-6">
-            <BuyButton className="w-full justify-center text-[11px] tracking-[0.22em]">
+            <BuyButton className="w-full px-7 text-[11px]">
               Buy the Ebook to Enter
             </BuyButton>
           </div>

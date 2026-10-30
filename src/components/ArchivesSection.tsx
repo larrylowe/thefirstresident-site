@@ -1,57 +1,48 @@
 import Image from "next/image";
+import { BuyButton } from "./BuyButton";
 import { FadeIn } from "./FadeIn";
 
+/** Archive: the purchase-exclusive Whitmore Investigation. Content stays behind /archive's access check. */
 export function ArchivesSection() {
   return (
-    <section id="archives" className="overflow-hidden bg-ink" style={{ scrollMarginTop: "80px" }}>
-      <div className="grid grid-cols-1 md:grid-cols-[50fr_50fr]">
-        {/* Image column — left */}
-        <div className="relative h-[340px] md:h-auto md:min-h-[640px]">
-          <Image
-            src="/images/Section%206%20Archives.png"
-            alt="Investigative archives — newspapers, records, and witness accounts from Briar Glen"
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover object-center"
-          />
-          {/* Desktop blend */}
-          <div className="absolute inset-0 hidden bg-gradient-to-r from-transparent via-transparent to-ink/85 md:block" />
-          {/* Mobile fade */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-ink md:hidden" />
-        </div>
-
-        {/* Text column — right */}
-        <div className="flex items-center bg-ink px-8 py-14 md:px-12 lg:px-16 xl:px-20">
-          <FadeIn delay={0.1} className="max-w-sm">
-            <p className="text-[11px] uppercase tracking-[0.3em] text-antique">
-              The Truth Is in the Records
-            </p>
-            <div className="my-4 flex items-center gap-3">
-              <div className="h-px w-8 bg-antique/50" />
-              <div className="h-1 w-1 rotate-45 bg-antique/60" />
-              <div className="h-px w-8 bg-antique/50" />
-            </div>
-            <h2 className="font-serif text-3xl font-semibold uppercase leading-[1.0] tracking-[0.04em] text-parchment md:text-4xl lg:text-5xl">
-              Investigative<br />Archives
-            </h2>
-            <div className="my-6 h-px w-10 bg-antique/40" />
-            <p className="text-sm leading-8 text-aged md:text-base">
-              Newspapers. Records. Witness accounts.<br className="hidden md:block" />
-              Explore the evidence behind the legend<br className="hidden md:block" />
-              and the questions that remain.
-            </p>
-            {/* Routes to /archive — a protected archive experience */}
-            <div className="mt-8">
-              <a
-                href="/archive"
-                className="inline-block border border-antique/70 px-7 py-4 text-sm uppercase tracking-[0.2em] text-parchment transition hover:border-antique hover:bg-antique hover:text-charcoal"
-              >
-                Explore the Archives
-              </a>
-            </div>
-          </FadeIn>
-        </div>
+    <article id="archives" className="relative flex flex-col" style={{ scrollMarginTop: "80px" }}>
+      <div className="relative aspect-[16/10] w-full">
+        <Image
+          src="/images/archive-door-entry.png"
+          alt="The locked door of the Briar Glen Archives, with a caution sign"
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0d0b09]/70" />
+        <span className="absolute right-4 top-4 border border-antique/70 bg-charcoal/70 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-parchment">
+          Included with Purchase
+        </span>
       </div>
-    </section>
+      <FadeIn delay={0.1} className="flex flex-1 flex-col px-5 py-10 sm:px-8 md:px-10 md:py-12 lg:px-14">
+        <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-antique">The Archive · For Readers</p>
+        <h2 className="mt-5 font-serif text-[32px] font-normal leading-[1.12] text-parchment lg:text-[40px]">
+          The Whitmore Investigation
+        </h2>
+        <p className="mt-5 font-serif text-xl leading-relaxed text-aged">
+          Some records were never meant to be filed. Newspapers. Records. Witness
+          accounts. Unlocked with the ebook, and best opened after you finish it.
+        </p>
+        <p className="mt-4 text-sm leading-6 text-aged/75">
+          Every ebook purchase includes access. After checkout you go straight into the
+          archive, and you can restore access later with your checkout email.
+        </p>
+        <p className="mt-4 text-[10px] font-medium uppercase tracking-[0.22em] text-aged/55">Contains spoilers</p>
+        <div className="mt-auto flex flex-col gap-4 pt-8 sm:flex-row sm:items-center">
+          <BuyButton className="px-6 text-xs">Buy the Ebook to Enter</BuyButton>
+          <a
+            href="/archive"
+            className="text-[11px] font-medium uppercase tracking-[0.18em] text-aged transition hover:text-antique"
+          >
+            Already purchased? Restore access
+          </a>
+        </div>
+      </FadeIn>
+    </article>
   );
 }

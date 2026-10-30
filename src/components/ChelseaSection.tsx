@@ -3,46 +3,53 @@ import { FadeIn } from "./FadeIn";
 
 export function ChelseaSection() {
   return (
-    <section id="chelsea" className="overflow-hidden bg-charcoal" style={{ scrollMarginTop: "80px" }}>
-      {/* Stable anchor for #mystery nav link */}
+    <section id="story" className="relative overflow-hidden bg-charcoal" style={{ scrollMarginTop: "80px" }}>
+      {/* Stable anchors for older #chelsea and #mystery links */}
+      <span id="chelsea" aria-hidden="true" className="absolute top-0" />
       <span id="mystery" aria-hidden="true" className="absolute top-0" />
-      <div className="grid grid-cols-1 md:grid-cols-[55fr_45fr]">
-        {/* Image column */}
-        <div className="relative h-[340px] md:h-auto md:min-h-[640px]">
+      <div className="grid grid-cols-1 md:grid-cols-[50fr_50fr]">
+        {/* Image column — anchored on Chelsea */}
+        <div className="relative h-[320px] sm:h-[420px] md:h-auto md:min-h-[620px]">
           <Image
             src="/images/Section%202%20Chelsea.png"
-            alt="A young girl carries a warm pie toward Briar Glen — the mystery begins here"
+            alt="Chelsea Parker, nine years old, arriving at Briar Glen"
             fill
-            sizes="(max-width: 768px) 100vw, 55vw"
-            className="object-cover object-center"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover object-[30%_50%]"
           />
-          {/* Blend edge into text column on desktop */}
-          <div className="absolute inset-0 hidden bg-gradient-to-r from-transparent via-transparent to-charcoal/80 md:block" />
-          {/* Fade bottom on mobile */}
+          <div className="absolute inset-0 hidden bg-gradient-to-r from-transparent via-transparent to-charcoal md:block" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-charcoal md:hidden" />
         </div>
 
         {/* Text column */}
-        <div className="flex items-center bg-charcoal px-8 py-14 md:px-12 lg:px-16 xl:px-20">
-          <FadeIn delay={0.1} className="max-w-sm">
-            <p className="text-[11px] uppercase tracking-[0.3em] text-antique">
-              The Story Begins Here
+        <div className="flex items-center px-5 pb-16 pt-4 sm:px-8 md:px-12 md:py-20 lg:px-16">
+          <FadeIn delay={0.1} className="max-w-xl">
+            <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-antique">
+              Virginia · Spring 1984
             </p>
-            <div className="my-4 flex items-center gap-3">
-              <div className="h-px w-8 bg-antique/50" />
-              <div className="h-1 w-1 rotate-45 bg-antique/60" />
-              <div className="h-px w-8 bg-antique/50" />
-            </div>
-            <h2 className="font-serif text-3xl font-semibold uppercase leading-[1.0] tracking-[0.04em] text-parchment md:text-4xl lg:text-5xl">
-              A Mystery Rooted<br />in Place —<br />and in Time.
+            <h2 className="mt-5 font-serif text-[32px] font-normal leading-[1.12] text-parchment sm:text-4xl lg:text-[46px]">
+              A little girl. A grandmother she adores. A house with a history no one speaks of.
             </h2>
-            <div className="my-6 h-px w-10 bg-antique/40" />
-            <p className="text-sm leading-8 text-aged md:text-base">
-              A little girl. A warm pie. A house with a history
-              no one speaks of. What began as a simple act
-              of kindness became a legend that never died.
-            </p>
-            {/* No button in Section 2 per brief */}
+            <div className="my-7 h-px w-10 bg-antique/40" />
+            <div className="space-y-5 font-serif text-xl leading-relaxed text-aged">
+              <p>
+                On Saturdays, Chelsea Parker visits her grandmother, Nana Charlotte Parker,
+                at Briar Glen Residence: a residence for the elderly, housed in a former
+                private residence in Virginia. There are rockers on the side porch,
+                crossword books, bingo, and gossip traded over cold coffee. The residents
+                call her sugar.
+              </p>
+              <p>
+                When Nana Charlotte is hurt while no one is watching, the grown folks reach
+                for ordinary explanations. Chelsea has stopped believing them.
+              </p>
+            </div>
+            <a
+              href="#prelude"
+              className="mt-8 inline-block text-xs font-medium uppercase tracking-[0.22em] text-antique transition hover:text-parchment"
+            >
+              Read the Prelude free →
+            </a>
           </FadeIn>
         </div>
       </div>
