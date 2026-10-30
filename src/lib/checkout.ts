@@ -18,6 +18,9 @@ export async function createEbookCheckoutSession(requestOrigin?: string) {
   if (!priceId) {
     throw new Error("STRIPE_PRICE_ID_EBOOK is not set");
   }
+  if (!priceId.startsWith("price_")) {
+    throw new Error("STRIPE_PRICE_ID_EBOOK must be a Stripe price ID (price_...), not an amount");
+  }
 
   const siteUrl = returnBaseUrl(requestOrigin);
 

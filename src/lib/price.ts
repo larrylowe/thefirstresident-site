@@ -9,6 +9,10 @@ import { stripe } from "@/lib/stripe";
 export async function getEbookPrice(): Promise<string> {
   const priceId = process.env.STRIPE_PRICE_ID_EBOOK;
   if (!priceId || !process.env.STRIPE_SECRET_KEY) return product.price;
+  if (!priceId.startsWith("price_")) {
+    console.error("STRIPE_PRICE_ID_EBOOK is not a Stripe price ID (price_...); showing the configured price");
+    return product.price;
+  }
 
   try {
     const price = await stripe.prices.retrieve(priceId);
