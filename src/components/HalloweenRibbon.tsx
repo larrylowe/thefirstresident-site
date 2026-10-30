@@ -30,18 +30,18 @@ export function HalloweenRibbon() {
   if (!visible) return null;
 
   return (
-    <div className="border-b border-antique/20 bg-[#24170f] px-4 py-2 text-center">
-      <p className="text-[11px] leading-5 text-aged sm:text-sm">
-        <span className="mr-2 hidden text-[10px] font-medium uppercase tracking-[0.24em] text-parchment sm:inline">
+    <div className="w-full bg-[#C65A24] px-3 py-2 sm:px-4 text-center text-[#1a120c]">
+      <p className="text-[10.5px] leading-5 sm:text-sm">
+        <span className="mr-1 whitespace-nowrap text-[9.5px] font-semibold uppercase tracking-[0.14em] sm:mr-2 sm:text-[10px] sm:tracking-[0.24em]">
           Halloween Weekend ·
         </span>
         <span className="font-serif italic sm:text-[15px]">
-          <span className="sm:hidden">Halloween weekend: read the Prelude free.</span>
-          <span className="hidden sm:inline">Read the Prelude free. Then decide whether to go back to Briar Glen.</span>
+          Read the Prelude free.
+          <span className="hidden sm:inline"> Then decide whether to go back to Briar Glen.</span>
         </span>
         <a
           href="/#prelude"
-          className="ml-3 text-[10px] font-medium uppercase tracking-[0.2em] text-antique underline underline-offset-4 transition hover:text-parchment"
+          className="ml-1.5 whitespace-nowrap text-[9.5px] font-semibold uppercase tracking-[0.14em] sm:text-[10px] sm:tracking-[0.2em] underline underline-offset-4 transition hover:text-black sm:ml-3"
         >
           Read now
         </a>

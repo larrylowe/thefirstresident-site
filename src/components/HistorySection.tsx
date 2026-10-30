@@ -29,12 +29,14 @@ export function HistorySection() {
           Image · Heathrow, 1830s · A handmade cloth figure
         </p>
         <div className="mt-auto pt-8">
-          {/* The deeper history is part of the paid experience */}
+          <p className="mb-3 text-sm leading-6 text-aged/75">
+            The deeper history lives in the Whitmore Investigation archive, included with the ebook.
+          </p>
           <a
-            href="/buy"
+            href="#archives"
             className="text-xs font-medium uppercase tracking-[0.22em] text-antique transition hover:text-parchment"
           >
-            Explore the History →
+            Explore the History in the Archive →
           </a>
         </div>
       </FadeIn>

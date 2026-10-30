@@ -37,7 +37,7 @@ export function Hero({ price }: { price: string }) {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[50%_40%]"
+            className="object-cover object-[100%_45%] md:object-[50%_40%]"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-charcoal/30 via-transparent to-charcoal md:hidden" />
           <div className="absolute inset-0 hidden bg-gradient-to-r from-charcoal/95 via-charcoal/70 to-charcoal/25 md:block" />
@@ -48,12 +48,12 @@ export function Hero({ price }: { price: string }) {
           <div className="grid w-full grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(220px,300px)] md:items-center md:gap-12 lg:gap-20">
 
             {/* Mobile: cover overlaps the bottom of the house image, price beside it */}
-            <div className="-mt-28 mb-7 flex items-end gap-5 md:hidden">
-              <Cover className="w-[124px] shrink-0 sm:w-[150px]" sizes="150px" />
-              <div className="pb-1">
-                <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-antique">A Novel by Larry Lowe</p>
-                <p className="mt-2 font-serif text-[42px] leading-none text-parchment">${price}</p>
-                <p className="mt-2 text-xs leading-5 text-aged/80">
+            <div className="-mt-24 mb-6 flex items-end gap-4 sm:gap-6 md:hidden">
+              <Cover className="w-[112px] shrink-0 sm:w-[140px]" sizes="140px" />
+              <div className="min-w-0 border-l border-antique/30 pb-0.5 pl-4">
+                <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-antique">A Novel by Larry Lowe</p>
+                <p className="mt-1.5 font-serif text-[40px] leading-none text-parchment">${price}</p>
+                <p className="mt-1.5 text-xs leading-5 text-aged/85">
                   Ebook · instant download<br />+ Whitmore Investigation archive
                 </p>
               </div>

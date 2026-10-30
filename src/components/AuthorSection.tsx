@@ -22,7 +22,7 @@ export function AuthorSection() {
               alt="Larry Lowe, author of The First Resident of Briar Glen"
               fill
               sizes="600px"
-              className="origin-[48%_14%] scale-[1.6] object-cover object-[50%_0%]"
+              className="origin-[48%_42%] scale-[1.7] object-cover object-[50%_0%]"
             />
           </div>
           <p className="mt-4 text-center text-[11px] font-medium uppercase tracking-[0.28em] text-aged/70 md:text-left">
@@ -48,7 +48,7 @@ export function AuthorSection() {
               &ldquo;And for the ancestors, whose names, stories, and silences still ask to be remembered.&rdquo;
             </p>
             <p className="mt-3 text-[10px] font-medium uppercase tracking-[0.22em] text-aged/55">
-              From the Dedication · Published by Partner54 Digital
+              From the Dedication
             </p>
           </div>
         </FadeIn>
