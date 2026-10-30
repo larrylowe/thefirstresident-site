@@ -25,11 +25,10 @@ export function VideoSection({ price }: { price: string }) {
           <h2 className="mt-5 font-serif text-4xl font-normal leading-tight text-parchment md:text-5xl lg:text-[56px]">
             She&rsquo;s been waiting.
           </h2>
-          <blockquote className="mt-6 font-serif text-2xl italic leading-snug text-antique md:text-[26px]">
-            &ldquo;Emma was a resident at Briar Glen in the same way the others were, except Emma was a doll.&rdquo;
-          </blockquote>
-          <p className="mt-5 font-serif text-xl leading-relaxed text-aged">
-            She was always somewhere, and no one ever explained why.
+          <p className="mt-6 font-serif text-2xl italic leading-snug text-antique md:text-[26px]">
+            Among the residents of Briar Glen was a woman named Emma. Nobody seemed to
+            remember when she arrived, and nobody was particularly interested in explaining
+            why she never joined the others for supper.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <BuyButton className="px-6 text-xs">Buy the Ebook · ${price}</BuyButton>

@@ -18,13 +18,12 @@ export function HistorySection() {
       <FadeIn className="flex flex-1 flex-col px-5 py-10 sm:px-8 md:px-10 md:py-12 lg:px-14">
         <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-antique">The History · Virginia, 1830s</p>
         <h2 className="mt-5 font-serif text-[32px] font-normal leading-[1.12] text-parchment lg:text-[40px]">
-          The sign says est. 1882. The house is older.
+          The house is older than Briar Glen.
         </h2>
         <p className="mt-5 font-serif text-xl leading-relaxed text-aged">
-          Before it was a home for the elderly, Briar Glen was Heathrow, a Virginia
-          plantation. The novel&rsquo;s older story begins there, in the 1830s, with a
-          six-year-old girl who had learned that a child might be looked at without ever
-          once being seen.
+          Long before Briar Glen became a residence for the elderly, the house stood on
+          land worked by enslaved people. The years have changed its appearance and its
+          purpose, though some things have proved considerably harder to leave behind.
         </p>
         <p className="mt-4 text-[10px] uppercase tracking-[0.2em] text-aged/55">
           Image · Heathrow, 1830s · A handmade cloth figure

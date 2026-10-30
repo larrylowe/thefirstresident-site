@@ -1,16 +1,25 @@
 import { stripe } from "@/lib/stripe";
 
 /**
+ * Site URL that Stripe returns visitors to. Preview deployments return to
+ * their own preview domain; production uses NEXT_PUBLIC_SITE_URL.
+ */
+function returnBaseUrl(requestOrigin?: string) {
+  if (process.env.VERCEL_ENV === "preview" && requestOrigin) return requestOrigin;
+  return process.env.NEXT_PUBLIC_SITE_URL || requestOrigin || "http://localhost:3000";
+}
+
+/**
  * Creates the ebook Checkout Session. Shared by POST /api/checkout and the
  * permanent GET /buy link so both routes start the same checkout.
  */
-export async function createEbookCheckoutSession() {
+export async function createEbookCheckoutSession(requestOrigin?: string) {
   const priceId = process.env.STRIPE_PRICE_ID_EBOOK;
   if (!priceId) {
     throw new Error("STRIPE_PRICE_ID_EBOOK is not set");
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const siteUrl = returnBaseUrl(requestOrigin);
 
   return stripe.checkout.sessions.create({
     mode: "payment",
@@ -24,4 +33,13 @@ export async function createEbookCheckoutSession() {
       product: "the-first-resident-ebook",
     },
   });
+}
+
+/** Non-secret summary of a checkout failure for server logs. */
+export function describeCheckoutError(error: unknown) {
+  if (error && typeof error === "object") {
+    const e = error as { type?: string; code?: string; param?: string; statusCode?: number; message?: string };
+    return { type: e.type, code: e.code, param: e.param, statusCode: e.statusCode, message: e.message };
+  }
+  return { message: String(error) };
 }

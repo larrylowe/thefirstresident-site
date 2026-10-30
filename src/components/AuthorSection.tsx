@@ -21,8 +21,8 @@ export function AuthorSection() {
               src="/images/author-larry-lowe.jpg"
               alt="Larry Lowe, author of The First Resident of Briar Glen"
               fill
-              sizes="(max-width: 768px) 360px, 360px"
-              className="object-cover object-[50%_22%]"
+              sizes="600px"
+              className="origin-[48%_14%] scale-[1.6] object-cover object-[50%_0%]"
             />
           </div>
           <p className="mt-4 text-center text-[11px] font-medium uppercase tracking-[0.28em] text-aged/70 md:text-left">

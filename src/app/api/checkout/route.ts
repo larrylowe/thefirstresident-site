@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
-import { createEbookCheckoutSession } from "@/lib/checkout";
+import { NextRequest, NextResponse } from "next/server";
+import { createEbookCheckoutSession, describeCheckoutError } from "@/lib/checkout";
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   if (!process.env.STRIPE_PRICE_ID_EBOOK) {
     console.error("STRIPE_PRICE_ID_EBOOK is not set");
     return NextResponse.json(
@@ -11,10 +11,10 @@ export async function POST() {
   }
 
   try {
-    const session = await createEbookCheckoutSession();
+    const session = await createEbookCheckoutSession(request.nextUrl.origin);
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error("Stripe checkout error", error);
+    console.error("Stripe checkout error", describeCheckoutError(error));
     return NextResponse.json(
       { error: "Unable to create checkout session." },
       { status: 500 }
