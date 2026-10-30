@@ -1,45 +1,51 @@
-import Image from "next/image";
 import { BuyButton } from "./BuyButton";
 import { FadeIn } from "./FadeIn";
 
-export function CTASection() {
+/**
+ * Closing invitation. The original Section 7 artwork is split into its photo
+ * strips, parchment and ornaments (public/images/invitation) so the ornaments
+ * sit in their own rows and can never overlap the headline or button.
+ */
+export function CTASection({ price }: { price: string }) {
   return (
     <section id="cta" className="relative overflow-hidden bg-charcoal" style={{ scrollMarginTop: "80px" }}>
       {/* Stable anchor for #stay-close nav link */}
       <span id="stay-close" aria-hidden="true" className="absolute top-0" />
-      {/* Section 7 background image */}
-      <Image
-        src="/images/Section%207%20CTA.png"
-        alt="You have been invited into Briar Glen"
-        fill
-        sizes="100vw"
-        className="object-cover object-center scale-[1.02]"
-      />
-      {/* Gradient overlay for text legibility */}
-      <div className="absolute inset-0 bg-gradient-to-b from-charcoal/60 via-charcoal/50 to-charcoal/70" />
-      <div className="absolute inset-0 bg-charcoal/30" />
 
-      {/* Content */}
-      <div className="relative z-10 flex min-h-[420px] flex-col items-center justify-center px-6 py-20 text-center md:min-h-[480px]">
-        <FadeIn className="flex flex-col items-center">
-          <h2 className="font-serif text-4xl font-semibold uppercase leading-[0.95] tracking-[0.06em] text-parchment sm:text-5xl md:text-6xl lg:text-7xl">
-            You&rsquo;ve Been Invited<br />
-            <span className="text-antique">into Briar Glen.</span>
+      <div
+        aria-hidden="true"
+        className="h-16 bg-cover bg-center sm:h-24 md:h-28"
+        style={{ backgroundImage: "url('/images/invitation/top-strip.jpg')" }}
+      />
+
+      <div
+        className="bg-cover bg-center px-5 py-7 sm:px-10 md:px-16 md:py-9"
+        style={{ backgroundImage: "url('/images/invitation/parchment.jpg')" }}
+      >
+        <FadeIn className="mx-auto flex max-w-5xl flex-col items-center text-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/invitation/ornament-top.png" alt="" aria-hidden="true" className="h-auto w-[200px] max-w-full sm:w-[260px]" />
+
+          <h2 className="mt-6 max-w-full break-words font-serif text-[clamp(2rem,1.1rem+3.6vw,4.25rem)] font-medium leading-[1.08] text-[#24170c] [text-wrap:balance] md:mt-7">
+            You&rsquo;ve been invited into Briar Glen.
           </h2>
-          <p className="mt-4 font-serif text-xl italic text-aged md:text-2xl">
-            RSVP here.
-          </p>
-          {/* Ornamental separator */}
-          <div className="my-7 flex w-full items-center justify-center gap-4">
-            <div className="h-px w-16 bg-antique/50" />
-            <div className="h-1.5 w-1.5 rotate-45 bg-antique/70" />
-            <div className="h-px w-16 bg-antique/50" />
+
+          <div className="mt-8 md:mt-9">
+            <BuyButton variant="dark" className="px-6 text-xs sm:px-9 sm:text-sm">
+              Accept the Invitation · ${price}
+            </BuyButton>
           </div>
-          <div className="flex justify-center">
-            <BuyButton>Buy the Ebook</BuyButton>
-          </div>
+
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/invitation/ornament-bottom.png" alt="" aria-hidden="true" className="mt-8 h-auto w-[200px] max-w-full sm:w-[280px] md:mt-10" />
         </FadeIn>
       </div>
+
+      <div
+        aria-hidden="true"
+        className="h-8 bg-cover bg-center md:h-11"
+        style={{ backgroundImage: "url('/images/invitation/bottom-strip.jpg')" }}
+      />
     </section>
   );
 }

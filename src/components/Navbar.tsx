@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { HalloweenRibbon } from "./HalloweenRibbon";
 
 /**
  * Nav links with full-path hrefs so they resolve correctly from any route
@@ -9,62 +10,64 @@ import { Menu, X } from "lucide-react";
  * links by scrolling to the matching element without a full navigation.
  */
 const navLinks = [
-  { href: "/",         label: "Home",                   external: false },
-  { href: "/#sample",  label: "Read a Sample",          external: false },
-  { href: "/#mystery", label: "The Mystery",            external: false },
-  { href: "/#history", label: "History & Hauntings",    external: false },
-  { href: "/archive",  label: "Investigative Archives", external: false },
-  { href: "/#buy",     label: "Buy the Ebook",          external: false },
+  { href: "/#story",   label: "The Story" },
+  { href: "/#trailer", label: "Trailer" },
+  { href: "/#prelude", label: "Read the Prelude" },
+  { href: "/#history", label: "History" },
+  { href: "/archive",  label: "Archive" },
 ];
 
-export function Navbar() {
+export function Navbar({ price }: { price?: string }) {
   const [open, setOpen] = useState(false);
+  const priceLabel = price ? ` · $${price}` : "";
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-antique/20 bg-charcoal/92 backdrop-blur-md">
-      <nav className="mx-auto flex h-20 max-w-screen-xl items-center justify-between gap-4 px-5 lg:px-8">
+      <HalloweenRibbon />
+      <nav className="mx-auto flex h-16 max-w-screen-xl items-center justify-between gap-4 px-4 sm:px-5 md:h-20 lg:px-8">
 
         {/* Logo — shrink-0 so it never compresses */}
         <a
           href="/"
-          className="shrink-0 font-serif text-[13px] font-medium uppercase leading-[1.4] tracking-[0.14em] text-parchment transition hover:text-antique"
+          className="min-w-0 shrink font-serif text-[15px] font-medium uppercase leading-tight tracking-[0.12em] text-parchment transition hover:text-antique sm:text-lg"
         >
-          The First Resident<br />of Briar Glen
+          The First Resident
+          <span className="hidden text-[0.72em] tracking-[0.16em] text-aged/70 sm:inline"> of Briar Glen</span>
         </a>
 
-        {/* Desktop nav links — tighter gap so they fit at 1280px */}
-        <div className="hidden items-center gap-5 xl:flex 2xl:gap-7">
+        {/* Desktop nav links */}
+        <div className="hidden items-center gap-6 xl:flex 2xl:gap-8">
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              target={link.external ? "_blank" : undefined}
-              rel={link.external ? "noopener noreferrer" : undefined}
-              className="whitespace-nowrap text-[10px] uppercase tracking-[0.14em] text-aged/80 transition hover:text-antique"
+              className="whitespace-nowrap text-[11px] uppercase tracking-[0.16em] text-aged/85 transition hover:text-antique"
             >
               {link.label}
             </a>
           ))}
         </div>
 
-        {/* Desktop CTA */}
-        <div className="hidden shrink-0 xl:block">
+        <div className="flex shrink-0 items-center gap-3">
+          {/* Buy CTA — always visible */}
           <a
-            href="/#sample"
-            className="whitespace-nowrap border border-antique/70 px-4 py-2.5 text-[10px] uppercase tracking-[0.18em] text-parchment transition hover:border-antique hover:bg-antique hover:text-charcoal"
+            href="/buy"
+            className="whitespace-nowrap bg-antique px-3 py-2 text-[10px] font-medium uppercase tracking-[0.16em] text-charcoal transition hover:bg-aged sm:px-4 sm:py-2.5 md:text-[11px]"
           >
-            Read Free Sample
+            <span className="xl:hidden">Buy{price ? ` $${price}` : " the Ebook"}</span>
+            <span className="hidden xl:inline">Buy the Ebook{priceLabel}</span>
           </a>
-        </div>
 
-        {/* Mobile hamburger */}
-        <button
-          className="xl:hidden text-parchment transition hover:text-antique"
-          aria-label="Toggle navigation menu"
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+          {/* Mobile hamburger */}
+          <button
+            className="text-parchment transition hover:text-antique xl:hidden"
+            aria-label="Toggle navigation menu"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </nav>
 
       {/* Mobile drawer */}
@@ -75,8 +78,6 @@ export function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
-                target={link.external ? "_blank" : undefined}
-                rel={link.external ? "noopener noreferrer" : undefined}
                 onClick={() => setOpen(false)}
                 className="text-sm uppercase tracking-[0.18em] text-aged transition hover:text-antique"
               >
@@ -84,11 +85,11 @@ export function Navbar() {
               </a>
             ))}
             <a
-              href="/#sample"
+              href="/buy"
               onClick={() => setOpen(false)}
-              className="mt-3 border border-antique/70 px-6 py-3 text-center text-sm uppercase tracking-[0.2em] text-parchment transition hover:bg-antique hover:text-charcoal"
+              className="mt-3 bg-antique px-6 py-3 text-center text-sm uppercase tracking-[0.2em] text-charcoal transition hover:bg-aged"
             >
-              Read Free Sample
+              Buy the Ebook{priceLabel}
             </a>
           </div>
         </div>

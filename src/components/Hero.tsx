@@ -1,128 +1,125 @@
 "use client";
 
 import Image from "next/image";
-import { BookOpen, Play, ShoppingCart } from "lucide-react";
+import { Play } from "lucide-react";
+import { useState } from "react";
 import { BuyButton } from "./BuyButton";
 import { FadeIn } from "./FadeIn";
-import { useState } from "react";
 
-const sampleUrl = "/samples/first-resident-sample.pdf";
 const VIDEO_EMBED_URL = "https://www.youtube.com/embed/pOdHt66Bue4?autoplay=1&rel=0&modestbranding=1";
 
-export function Hero() {
+function Cover({ className = "", sizes }: { className?: string; sizes: string }) {
+  return (
+    <div className={`relative aspect-[2/3] border border-antique/40 shadow-[0_24px_60px_rgba(0,0,0,0.7)] ${className}`}>
+      <Image
+        src="/images/book-cover-final.png"
+        alt="The First Resident of Briar Glen, a novel by Larry Lowe: book cover"
+        fill
+        priority
+        sizes={sizes}
+        className="object-cover"
+      />
+    </div>
+  );
+}
+
+export function Hero({ price }: { price: string }) {
   const [showVideo, setShowVideo] = useState(false);
 
   return (
     <>
-      <section id="hero" className="relative min-h-screen overflow-hidden bg-charcoal">
-        {/* Full-width background image */}
-        <Image
-          src="/images/Section%201%20House.png"
-          alt="Briar Glen Residence at night under a stormy sky"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        {/* Gradient overlays — strong left coverage for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-r from-charcoal/97 via-charcoal/75 to-charcoal/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-charcoal/35" />
+      <section id="hero" className="relative overflow-hidden bg-charcoal pt-16 md:min-h-[760px] md:pt-0 lg:min-h-screen">
+        {/* Background image — a banner on mobile, full-bleed on desktop */}
+        <div className="relative h-[300px] sm:h-[380px] md:absolute md:inset-0 md:h-auto">
+          <Image
+            src="/images/Section%201%20House.png"
+            alt="Briar Glen Residence at night under a stormy sky"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[100%_45%] md:object-[50%_40%] lg:object-[100%_40%]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-charcoal/30 via-transparent to-charcoal md:hidden" />
+          <div className="absolute inset-0 hidden bg-gradient-to-r from-charcoal/95 via-charcoal/70 to-charcoal/25 md:block" />
+          <div className="absolute inset-0 hidden bg-gradient-to-t from-charcoal via-transparent to-charcoal/40 md:block" />
+        </div>
 
-        {/* Hero content — three-column grid on desktop */}
-        <div className="relative z-10 flex min-h-screen items-center px-6 pt-28 pb-20 md:px-14 lg:px-20">
-          <div className="w-full max-w-[1240px] mx-auto grid grid-cols-1 gap-8 md:grid-cols-[minmax(280px,420px)_minmax(210px,250px)_1fr] md:gap-10 md:items-start">
+        {/* From xl up, the right-hand padding keeps the Briar Glen Residence sign clear of the cover.
+            The sign sits about 0.12–0.42 × the hero height in from the right edge. */}
+        <div className="relative z-10 mx-auto max-w-[1240px] px-5 pb-14 sm:px-8 md:flex md:min-h-[760px] md:items-center md:px-12 md:pb-20 md:pt-40 lg:min-h-screen lg:px-16 xl:max-w-none xl:pl-[max(4rem,calc((100vw-1240px)/2+4rem))] xl:pr-[calc(42vh+4rem)]">
+          <div className="grid w-full grid-cols-1 md:grid-cols-[minmax(0,1fr)_200px] md:items-center md:gap-12 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-16 xl:grid-cols-[minmax(0,1fr)_240px]">
 
-            {/* Column 1: Headline + divider + body copy */}
-            <FadeIn>
-              <h1 className="font-serif text-4xl font-semibold uppercase leading-[0.9] tracking-[0.05em] text-parchment sm:text-5xl md:text-6xl lg:text-7xl">
-                Every house has<br />a first resident.<br />
-                <span className="text-antique">This one never left.</span>
-              </h1>
-
-              {/* Ornamental divider */}
-              <div className="my-6 flex items-center gap-3">
-                <div className="h-px w-12 bg-antique/60" />
-                <div className="h-1 w-1 rotate-45 bg-antique/70" />
-                <div className="h-px w-12 bg-antique/60" />
+            {/* Mobile: cover overlaps the bottom of the house image, price beside it */}
+            <div className="-mt-24 mb-6 flex items-end gap-4 sm:gap-6 md:hidden">
+              <Cover className="w-[112px] shrink-0 sm:w-[140px]" sizes="140px" />
+              <div className="min-w-0 border-l border-antique/30 pb-0.5 pl-4">
+                <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-antique">A Novel by Larry Lowe</p>
+                <p className="mt-1.5 font-serif text-[40px] leading-none text-parchment">${price}</p>
+                <p className="mt-1.5 text-xs leading-5 text-aged/85">
+                  Ebook · instant download<br />+ Whitmore Investigation archive
+                </p>
               </div>
+            </div>
 
-              {/* Body copy */}
-              <p className="text-base leading-8 text-aged md:text-[17px]">
-                Step into the shadowed past of Briar Glen,<br className="hidden sm:block" />
-                where history whispers and something<br className="hidden sm:block" />
-                still waits behind the door.
+            <FadeIn>
+              <p className="hidden text-[11px] font-medium uppercase tracking-[0.3em] text-antique md:block">
+                A Novel by Larry Lowe
+              </p>
+              <h1 className="font-serif text-[38px] font-normal leading-[1.08] text-parchment sm:text-5xl md:mt-6 md:text-6xl lg:text-7xl">
+                Every house has a first resident.{" "}
+                <em className="block text-antique max-md:inline">This one never left.</em>
+              </h1>
+              <p className="mt-6 max-w-xl font-serif text-xl leading-relaxed text-aged md:text-[22px]">
+                Nine-year-old Chelsea Parker knows something is wrong at Briar Glen
+                before anyone else is ready to admit it.
               </p>
 
-              {/* Mobile-only CTA stack (shown below copy on small screens) */}
-              <div className="mt-8 flex max-w-[260px] flex-col gap-[10px] md:hidden">
-                <a
-                  href={sampleUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2 bg-antique px-5 py-[13px] text-[10px] font-medium uppercase tracking-[0.22em] text-charcoal transition hover:bg-aged"
-                >
-                  <BookOpen size={13} strokeWidth={2} />
-                  Read Free Sample
-                </a>
-                <button
-                  onClick={() => setShowVideo(true)}
-                  className="flex w-full items-center justify-center gap-2 border border-antique/70 bg-charcoal/60 px-5 py-[13px] text-[10px] font-medium uppercase tracking-[0.22em] text-parchment transition hover:border-antique hover:bg-charcoal/80"
-                >
-                  <Play size={13} strokeWidth={2} className="fill-antique text-antique" />
-                  Peek Inside Briar Glen
-                </button>
-                <div className="w-full [&>div]:w-full [&_button]:w-full [&_button]:rounded-none [&_button]:border [&_button]:border-antique/70 [&_button]:bg-charcoal/60 [&_button]:py-[13px] [&_button]:text-[10px] [&_button]:tracking-[0.22em] [&_button]:text-parchment [&_button]:transition hover:[&_button]:border-antique hover:[&_button]:bg-charcoal/80">
-                  <BuyButton>Buy the Ebook</BuyButton>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <BuyButton className="w-full px-6 text-sm sm:w-auto">Buy the Ebook · ${price}</BuyButton>
+                <div className="grid grid-cols-2 gap-3 sm:contents">
+                  <a
+                    href="#prelude"
+                    className="inline-flex items-center justify-center border border-antique/80 px-4 py-4 text-center text-[11px] font-medium uppercase tracking-[0.18em] text-parchment transition hover:bg-antique hover:text-charcoal sm:px-6 sm:text-sm"
+                  >
+                    <span className="sm:hidden">Read the Prelude</span>
+                    <span className="hidden sm:inline">Read the Prelude Free</span>
+                  </a>
+                  <button
+                    onClick={() => setShowVideo(true)}
+                    className="inline-flex items-center justify-center gap-2 border border-antique/30 px-4 py-4 text-[11px] font-medium uppercase tracking-[0.18em] text-parchment transition hover:border-antique sm:hidden"
+                  >
+                    <Play size={12} className="fill-antique text-antique" /> Trailer
+                  </button>
                 </div>
               </div>
-            </FadeIn>
 
-            {/* Column 2: CTA button stack (desktop only, hidden on mobile) */}
-            <FadeIn delay={0.1} className="hidden md:flex md:flex-col md:gap-[10px] md:pt-2">
-
-              {/* 1. READ FREE SAMPLE — filled antique gold */}
-              <a
-                href={sampleUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-[10px] bg-antique px-5 py-[15px] text-center text-[10px] font-medium uppercase tracking-[0.22em] text-charcoal transition hover:bg-aged"
-              >
-                <BookOpen size={13} strokeWidth={2} />
-                Read Free Sample
-              </a>
-
-              {/* 2. PEEK INSIDE BRIAR GLEN — dark outlined */}
               <button
                 onClick={() => setShowVideo(true)}
-                className="flex w-full items-center justify-center gap-[10px] border border-antique/70 bg-charcoal/60 px-5 py-[15px] text-[10px] font-medium uppercase tracking-[0.22em] text-parchment transition hover:border-antique hover:bg-charcoal/80"
+                className="group mt-6 hidden items-center gap-3 text-xs font-medium uppercase tracking-[0.2em] text-parchment transition hover:text-antique sm:inline-flex"
               >
-                <Play size={13} strokeWidth={2} className="fill-antique text-antique" />
-                Peek Inside Briar Glen
+                <span className="flex h-10 w-10 items-center justify-center rounded-full border border-antique/80 transition group-hover:bg-antique/15">
+                  <Play size={14} className="translate-x-px fill-parchment text-parchment" />
+                </span>
+                Watch the Trailer
               </button>
 
-              {/* 3. BUY THE EBOOK — Stripe checkout via BuyButton */}
-              <div className="w-full [&>div]:w-full [&_button]:w-full [&_button]:rounded-none [&_button]:border [&_button]:border-antique/70 [&_button]:bg-charcoal/60 [&_button]:py-[15px] [&_button]:text-[10px] [&_button]:tracking-[0.22em] [&_button]:text-parchment [&_button]:transition hover:[&_button]:border-antique hover:[&_button]:bg-charcoal/80">
-                <BuyButton>
-                  <span className="flex items-center justify-center gap-[10px]">
-                    <ShoppingCart size={13} strokeWidth={2} />
-                    Buy the Ebook
-                  </span>
-                </BuyButton>
-              </div>
-
+              <p className="mt-6 hidden text-sm text-aged/70 md:block">
+                Instant download · Includes the Whitmore Investigation archive
+              </p>
             </FadeIn>
 
-            {/* Column 3: Visual breathing room over hero bg — intentionally empty */}
-            <div className="hidden md:block" />
-
+            {/* Desktop cover */}
+            <FadeIn delay={0.15} className="hidden md:block md:self-end md:translate-y-12 xl:translate-y-0 xl:self-center">
+              <Cover className="w-full" sizes="300px" />
+            </FadeIn>
           </div>
         </div>
       </section>
 
-      {/* Video modal — triggered by PEEK INSIDE BRIAR GLEN */}
+      {/* Video modal — triggered by the hero trailer buttons */}
       {showVideo && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 px-4"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 px-4"
           onClick={() => setShowVideo(false)}
         >
           <div
@@ -132,14 +129,14 @@ export function Hero() {
             <button
               onClick={() => setShowVideo(false)}
               aria-label="Close video"
-              className="absolute -top-10 right-0 text-parchment/70 transition hover:text-parchment text-sm uppercase tracking-[0.2em]"
+              className="absolute -top-10 right-0 text-sm uppercase tracking-[0.2em] text-parchment/70 transition hover:text-parchment"
             >
               Close ✕
             </button>
             <div className="aspect-video w-full overflow-hidden bg-black shadow-2xl">
               <iframe
                 src={VIDEO_EMBED_URL}
-                title="The First Resident of Briar Glen video synopsis"
+                title="The First Resident of Briar Glen trailer"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen

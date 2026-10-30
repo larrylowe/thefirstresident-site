@@ -1,94 +1,56 @@
 import Image from "next/image";
 import { BuyButton } from "./BuyButton";
+import { CheckoutNotice } from "./CheckoutNotice";
 import { FadeIn } from "./FadeIn";
 
-const sampleUrl = "/samples/first-resident-sample.pdf";
-const introPrice = process.env.NEXT_PUBLIC_INTRO_PRICE || "4.99";
-const regularPrice = process.env.NEXT_PUBLIC_REGULAR_PRICE || "6.99";
+const includes = [
+  "The complete novel: Prelude and twenty chapters",
+  "Instant download",
+  "Access to the Whitmore Investigation archive",
+];
 
-export function CommerceSection() {
+export function CommerceSection({ price }: { price: string }) {
   return (
     <section
-      id="commerce"
-      className="relative overflow-hidden bg-charcoal"
+      id="buy"
+      className="relative overflow-hidden bg-[radial-gradient(ellipse_at_25%_40%,#2a1f14_0%,#151512_60%)]"
       style={{ scrollMarginTop: "80px" }}
     >
-      {/* Stable anchor for #sample nav link */}
-      <span id="sample" aria-hidden="true" className="absolute top-0" />
-      {/* Stable anchor for #buy nav link */}
-      <span id="buy" aria-hidden="true" className="absolute top-0" />
-      {/* Full-width background image — artwork lives in the center zone */}
-      <Image
-        src="/images/Section%204%20Commerce%20section.png"
-        alt="The First Resident of Briar Glen ebook cover"
-        fill
-        sizes="100vw"
-        className="object-cover object-center scale-[1.02]"
-      />
-      {/* Subtle overall depth tint — left/right columns add their own solid bg */}
-      <div className="absolute inset-0 bg-charcoal/20" />
+      {/* Stable anchor for older #commerce links */}
+      <span id="commerce" aria-hidden="true" className="absolute top-0" />
+      <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-center gap-10 px-5 py-16 sm:px-8 md:grid-cols-[minmax(220px,360px)_minmax(0,1fr)] md:gap-16 md:px-12 md:py-24 lg:px-16">
+        <FadeIn className="mx-auto w-[220px] sm:w-[280px] md:w-full">
+          <div className="relative aspect-[2/3] border border-antique/30 shadow-[0_30px_70px_rgba(0,0,0,0.75)]">
+            <Image
+              src="/images/book-cover-final.png"
+              alt="The First Resident of Briar Glen book cover"
+              fill
+              sizes="(max-width: 768px) 280px, 360px"
+              className="object-cover"
+            />
+          </div>
+        </FadeIn>
 
-      {/* Three-zone grid: [left text | center artwork | right text]
-          minmax columns guarantee left/right never crowd the artwork */}
-      <div
-        className="relative z-10 mx-auto grid max-w-[1400px] grid-cols-1 items-stretch md:grid-cols-[minmax(220px,1fr)_minmax(260px,380px)_minmax(220px,1fr)]"
-        style={{ minHeight: "700px" }}
-      >
-
-        {/* LEFT ZONE: solid dark bg — structurally cannot overlap center */}
-        <div className="flex items-center bg-charcoal/85 px-8 py-16 md:px-10 lg:px-14">
-          <FadeIn className="flex w-full flex-col items-start md:items-center md:text-center">
-            <div className="mb-4 text-antique">
-              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-              </svg>
-            </div>
-            <p className="text-[11px] uppercase tracking-[0.28em] text-antique">Read the Opening Chapter</p>
-            <h2 className="mt-3 font-serif text-4xl font-semibold uppercase leading-[0.9] tracking-[0.04em] text-parchment md:text-5xl">
-              Free
-            </h2>
-            <div className="my-5 h-px w-10 bg-antique/50" />
-            <p className="text-sm leading-8 text-aged">
-              Step inside Briar Glen.<br />
-              Read the first chapter and<br />
-              experience the mystery.
-            </p>
-            <div className="mt-8">
-              <a
-                href={sampleUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block border border-antique/70 bg-antique/10 px-7 py-4 text-sm uppercase tracking-[0.2em] text-parchment transition hover:border-antique hover:bg-antique hover:text-charcoal"
-              >
-                Read Chapter One
-              </a>
-            </div>
-          </FadeIn>
-        </div>
-
-        {/* CENTER ZONE: transparent — background artwork shows through fully */}
-        <div className="hidden md:block" aria-hidden="true" />
-
-        {/* RIGHT ZONE: solid dark bg — structurally cannot overlap center */}
-        <div className="flex items-center bg-charcoal/85 px-8 py-16 md:px-10 lg:px-14">
-          <FadeIn delay={0.15} className="flex w-full flex-col items-start md:items-center md:text-center">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-antique">The Complete Ebook</p>
-            <p className="mt-2 text-xs uppercase tracking-[0.22em] text-aged/70">Yours to Keep</p>
-            <h2 className="mt-4 font-serif text-5xl font-semibold text-parchment md:text-6xl">
-              ${introPrice}
-            </h2>
-            <p className="mt-1 text-[11px] uppercase tracking-[0.28em] text-antique">Launch Price</p>
-            <div className="my-5 h-px w-10 bg-antique/50" />
-            <p className="text-sm leading-7 text-aged">
-              Price returns to ${regularPrice}<br />after launch.
-            </p>
-            <div className="mt-8">
-              <BuyButton>Buy the Ebook</BuyButton>
-            </div>
-          </FadeIn>
-        </div>
-
+        <FadeIn delay={0.1} className="text-center md:text-left">
+          <p className="text-[11px] font-medium uppercase tracking-[0.3em] text-antique">The Complete Ebook</p>
+          <h2 className="mt-5 font-serif text-4xl font-normal leading-tight text-parchment md:text-5xl">
+            Finish what Chelsea started.
+          </h2>
+          <p className="mt-6 font-serif text-6xl leading-none text-parchment md:text-7xl">${price}</p>
+          <ul className="mx-auto mt-8 max-w-md space-y-3 text-left md:mx-0">
+            {includes.map((item) => (
+              <li key={item} className="flex items-start gap-3 font-serif text-xl text-aged">
+                <span className="mt-[0.6em] h-1.5 w-1.5 shrink-0 rotate-45 bg-antique" aria-hidden="true" />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-9 flex flex-col items-center gap-4 sm:flex-row md:items-center">
+            <BuyButton className="w-full px-9 text-sm sm:w-auto">Buy the Ebook</BuyButton>
+            <span className="text-xs text-aged/70">Secure checkout by Stripe</span>
+          </div>
+          <CheckoutNotice />
+        </FadeIn>
       </div>
     </section>
   );
