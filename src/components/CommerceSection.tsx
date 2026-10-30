@@ -22,7 +22,7 @@ export function CommerceSection({ price }: { price: string }) {
         <FadeIn className="mx-auto w-[220px] sm:w-[280px] md:w-full">
           <div className="relative aspect-[2/3] border border-antique/30 shadow-[0_30px_70px_rgba(0,0,0,0.75)]">
             <Image
-              src="/images/book-cover-approved.jpg"
+              src="/images/book-cover-final.png"
               alt="The First Resident of Briar Glen book cover"
               fill
               sizes="(max-width: 768px) 280px, 360px"

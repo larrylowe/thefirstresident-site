@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const sampleUrl = "/samples/first-resident-sample.pdf";
+const sampleUrl = "/samples/the-first-resident-prelude.pdf";
 
 const footerLinks = [
   { href: "#hero", label: "Home", external: false },

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { FadeIn } from "./FadeIn";
 
-const sampleUrl = "/samples/first-resident-sample.pdf";
+const sampleUrl = "/samples/the-first-resident-prelude.pdf";
 
 /** Free Prelude sample. Links to the existing published PDF, unchanged. */
 export function PreludeSection() {

@@ -12,7 +12,7 @@ function Cover({ className = "", sizes }: { className?: string; sizes: string })
   return (
     <div className={`relative aspect-[2/3] border border-antique/40 shadow-[0_24px_60px_rgba(0,0,0,0.7)] ${className}`}>
       <Image
-        src="/images/book-cover-approved.jpg"
+        src="/images/book-cover-final.png"
         alt="The First Resident of Briar Glen, a novel by Larry Lowe: book cover"
         fill
         priority
@@ -37,15 +37,17 @@ export function Hero({ price }: { price: string }) {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[100%_45%] md:object-[50%_40%]"
+            className="object-cover object-[100%_45%] md:object-[50%_40%] lg:object-[100%_40%]"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-charcoal/30 via-transparent to-charcoal md:hidden" />
           <div className="absolute inset-0 hidden bg-gradient-to-r from-charcoal/95 via-charcoal/70 to-charcoal/25 md:block" />
           <div className="absolute inset-0 hidden bg-gradient-to-t from-charcoal via-transparent to-charcoal/40 md:block" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-[1240px] px-5 pb-14 sm:px-8 md:flex md:min-h-[760px] md:items-center md:px-12 md:pb-20 md:pt-40 lg:min-h-screen lg:px-16">
-          <div className="grid w-full grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(220px,300px)] md:items-center md:gap-12 lg:gap-20">
+        {/* From xl up, the right-hand padding keeps the Briar Glen Residence sign clear of the cover.
+            The sign sits about 0.12–0.42 × the hero height in from the right edge. */}
+        <div className="relative z-10 mx-auto max-w-[1240px] px-5 pb-14 sm:px-8 md:flex md:min-h-[760px] md:items-center md:px-12 md:pb-20 md:pt-40 lg:min-h-screen lg:px-16 xl:max-w-none xl:pl-[max(4rem,calc((100vw-1240px)/2+4rem))] xl:pr-[calc(42vh+4rem)]">
+          <div className="grid w-full grid-cols-1 md:grid-cols-[minmax(0,1fr)_200px] md:items-center md:gap-12 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-16 xl:grid-cols-[minmax(0,1fr)_240px]">
 
             {/* Mobile: cover overlaps the bottom of the house image, price beside it */}
             <div className="-mt-24 mb-6 flex items-end gap-4 sm:gap-6 md:hidden">
@@ -107,7 +109,7 @@ export function Hero({ price }: { price: string }) {
             </FadeIn>
 
             {/* Desktop cover */}
-            <FadeIn delay={0.15} className="hidden md:block">
+            <FadeIn delay={0.15} className="hidden md:block md:self-end md:translate-y-12 xl:translate-y-0 xl:self-center">
               <Cover className="w-full" sizes="300px" />
             </FadeIn>
           </div>
