@@ -2,7 +2,8 @@
  * GET /archive/claim?session_id=<stripe_session_id>
  *
  * Called after a successful Stripe Checkout.  Verifies the session server-side,
- * sets the signed archive access cookie, and redirects to /archive.
+ * sets the signed archive access cookie, and redirects to /success, where the
+ * buyer downloads the ebook and can then enter the Archive.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -48,9 +49,12 @@ export async function GET(request: NextRequest) {
     const token = createArchiveToken();
     const cookieHeader = buildArchiveCookieHeader(token);
 
-    return NextResponse.redirect(`${BASE_URL}/archive?access=granted`, {
-      headers: { "Set-Cookie": cookieHeader },
-    });
+    return NextResponse.redirect(
+      `${BASE_URL}/success?session_id=${encodeURIComponent(sessionId)}`,
+      {
+        headers: { "Set-Cookie": cookieHeader },
+      }
+    );
   } catch (err) {
     console.error("Archive claim error:", err);
     return NextResponse.redirect(`${BASE_URL}/archive?access=failed`);
