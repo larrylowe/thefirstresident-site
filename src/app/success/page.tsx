@@ -34,7 +34,7 @@ export default async function SuccessPage({ searchParams }: Props) {
 
   return (
     <main className="min-h-screen bg-charcoal px-5 py-32 text-parchment">
-      <div className="mx-auto max-w-2xl rounded-sm border border-antique/25 bg-moss p-10">
+      <div className="mx-auto max-w-2xl rounded-sm border border-antique/25 bg-moss p-6 sm:p-10">
 
         {isPaid && sessionId ? (
           <>
@@ -67,29 +67,7 @@ export default async function SuccessPage({ searchParams }: Props) {
             </div>
           </>
         ) : (
-          <>
-            <p className="text-sm uppercase tracking-[0.28em] text-antique">
-              Find Your Purchase
-            </p>
-            <h1 className="mt-4 font-serif text-5xl leading-tight">
-              We couldn&rsquo;t confirm a purchase from this link.
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-aged">
-              If you bought the ebook, enter the email you used at checkout and the last
-              4 digits of the card you paid with, and we will take you to your download.
-            </p>
-            <RecoverPurchase />
-            <p className="mt-6 text-sm text-aged/75">
-              Still stuck? Contact{" "}
-              <a
-                href="mailto:support@thefirstresident.com"
-                className="text-antique underline hover:text-parchment"
-              >
-                support@thefirstresident.com
-              </a>{" "}
-              with your receipt.
-            </p>
-          </>
+          <RecoverPurchase />
         )}
 
         <div className="mt-12 border-t border-antique/20 pt-8">

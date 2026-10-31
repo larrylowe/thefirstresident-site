@@ -6,6 +6,7 @@ import { BuyButton } from "./BuyButton";
 
 export function ArchiveGate({ price }: { price: string }) {
   const [email, setEmail] = useState("");
+  const [last4, setLast4] = useState("");
   const [restoreStatus, setRestoreStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
@@ -13,7 +14,7 @@ export function ArchiveGate({ price }: { price: string }) {
 
   async function handleRestore(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!email.trim() || last4.length !== 4) return;
     setRestoreStatus("loading");
     setRestoreMessage("");
 
@@ -21,19 +22,15 @@ export function ArchiveGate({ price }: { price: string }) {
       const res = await fetch("/api/archive/restore-access", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
+        body: JSON.stringify({ email: email.trim(), last4 }),
       });
       const data = await res.json();
 
       if (res.ok && data.message) {
         setRestoreStatus("success");
         setRestoreMessage(data.message);
-        // Small delay, then go to the purchase's download page (which links to the
-        // Archive) or reload so the cookie takes effect
-        setTimeout(() => {
-          if (data.downloadUrl) window.location.assign(data.downloadUrl);
-          else window.location.reload();
-        }, 1200);
+        // Small delay then reload so the cookie takes effect
+        setTimeout(() => window.location.reload(), 1200);
       } else {
         setRestoreStatus("error");
         setRestoreMessage(
@@ -121,7 +118,8 @@ export function ArchiveGate({ price }: { price: string }) {
 
           {/* Restore access form */}
           <p className="text-[11px] leading-6 text-aged/70">
-            Restore archive access using the email from your checkout receipt.
+            Restore archive access using the email from your checkout receipt and the
+            last 4 digits of the card you paid with.
           </p>
 
           <form onSubmit={handleRestore} className="mt-4 flex flex-col gap-3" noValidate>
@@ -137,6 +135,23 @@ export function ArchiveGate({ price }: { price: string }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
+              required
+              className="w-full border border-antique/30 bg-charcoal/60 px-4 py-3 text-sm text-parchment placeholder-aged/40 focus:border-antique/70 focus:outline-none"
+            />
+            <label
+              htmlFor="restore-last4"
+              className="text-[10px] uppercase tracking-[0.22em] text-antique/70"
+            >
+              Card last 4 digits
+            </label>
+            <input
+              id="restore-last4"
+              inputMode="numeric"
+              autoComplete="off"
+              maxLength={4}
+              value={last4}
+              onChange={(e) => setLast4(e.target.value.replace(/\D/g, "").slice(0, 4))}
+              placeholder="1234"
               required
               className="w-full border border-antique/30 bg-charcoal/60 px-4 py-3 text-sm text-parchment placeholder-aged/40 focus:border-antique/70 focus:outline-none"
             />
