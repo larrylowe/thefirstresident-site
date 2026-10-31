@@ -50,12 +50,20 @@ export default async function SuccessPage({ searchParams }: Props) {
         </p>
 
         {isPaid && sessionId ? (
-          <a
-            href={downloadHref(sessionId)}
-            className="mt-8 inline-flex rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
-          >
-            Download the e-book
-          </a>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a
+              href={downloadHref(sessionId)}
+              className="inline-flex justify-center rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
+            >
+              Download the e-book
+            </a>
+            <Link
+              href="/archive"
+              className="inline-flex justify-center rounded-sm border border-antique/60 px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-parchment transition hover:bg-antique hover:text-charcoal"
+            >
+              Enter the Archive
+            </Link>
+          </div>
         ) : (
           <div className="mt-8 rounded-sm border border-antique/25 bg-charcoal/50 p-6">
             <p className="text-aged">
