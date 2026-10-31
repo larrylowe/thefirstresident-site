@@ -33,6 +33,21 @@ import {
 import { errorHtml } from "@/lib/errorHtml";
 
 const EBOOK_FILENAME = "The_First_Resident_of_Briar_Glen_Ebook_Larry_Lowe.pdf";
+const DEFAULT_EBOOK_PATH = "ebooks/" + EBOOK_FILENAME;
+
+/**
+ * BLOB_EBOOK_PATH must be a blob pathname such as "ebooks/book.pdf". A value
+ * that is not one (it once held a pasted CLI command) falls back to the
+ * default pathname instead of failing every download.
+ */
+function resolveEbookPath(): string {
+  const configured = process.env.BLOB_EBOOK_PATH?.trim().replace(/^\/+/, "");
+  if (configured && /^[\w./-]+\.pdf$/i.test(configured)) return configured;
+  if (configured) {
+    console.error("BLOB_EBOOK_PATH is not a PDF pathname; using the default ebook path");
+  }
+  return DEFAULT_EBOOK_PATH;
+}
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -65,12 +80,8 @@ export async function GET(request: NextRequest) {
     return errorHtml("This purchase does not include the e-book.");
   }
 
-  // --- 4. Require blob path configuration ---
-  const blobPath = process.env.BLOB_EBOOK_PATH;
-  if (!blobPath) {
-    console.error("BLOB_EBOOK_PATH is not configured");
-    return errorHtml("Server configuration error. Please contact support.", 500);
-  }
+  // --- 4. Resolve the private blob pathname of the e-book ---
+  const blobPath = resolveEbookPath();
 
   // --- 5. Get or create Blob download record ---
   let record = await getDownloadRecord(sessionId);
@@ -94,19 +105,19 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // --- 8. Resolve the blob URL by pathname, then fetch the private blob.
-  //        @vercel/blob get() requires a full URL, not a pathname.
+  // --- 8. Find the blob with exactly this pathname, then fetch it privately.
   let blobResult;
   try {
-    const { blobs } = await list({ prefix: blobPath, limit: 1 });
-    if (blobs.length === 0) {
+    const { blobs } = await list({ prefix: blobPath, limit: 10 });
+    const blob = blobs.find((b) => b.pathname === blobPath);
+    if (!blob) {
       console.error("E-book blob not found at path:", blobPath);
       return errorHtml(
         "The file could not be retrieved. Please contact support with your receipt.",
         500
       );
     }
-    blobResult = await get(blobs[0].url, { access: "private" });
+    blobResult = await get(blob.url, { access: "private" });
   } catch (err) {
     console.error("Failed to fetch e-book blob:", err);
     return errorHtml(
