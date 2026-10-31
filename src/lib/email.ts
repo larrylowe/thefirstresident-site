@@ -7,6 +7,11 @@
  *   EMAIL_FROM_ADDRESS  – a sending address on a domain verified in Resend,
  *                         e.g. orders@thefirstresident.com
  * The display name is always "Partner54 Digital".
+ *
+ * Optional:
+ *   EMAIL_REPLY_TO      – e.g. support@thefirstresident.com. Set it only once
+ *                         mail to that address is forwarded somewhere read;
+ *                         unset, replies go to the sending address.
  */
 
 export const SENDER_NAME = "Partner54 Digital";
@@ -28,12 +33,15 @@ export interface OutgoingEmail {
   idempotencyKey?: string;
 }
 
-export type SendResult = { ok: true } | { ok: false; reason: "not_configured" | "failed" };
+export type SendResult =
+  | { ok: true; id: string | null }
+  | { ok: false; reason: "not_configured" | "failed"; status?: number };
 
 /** Sends one email, retrying once on a rate limit or server error. */
 export async function sendEmail(message: OutgoingEmail): Promise<SendResult> {
   if (!emailConfigured()) return { ok: false, reason: "not_configured" };
 
+  let lastStatus: number | undefined;
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const res = await fetch("https://api.resend.com/emails", {
@@ -49,9 +57,14 @@ export async function sendEmail(message: OutgoingEmail): Promise<SendResult> {
           subject: message.subject,
           html: message.html,
           text: message.text,
+          ...(process.env.EMAIL_REPLY_TO ? { reply_to: process.env.EMAIL_REPLY_TO } : {}),
         }),
       });
-      if (res.ok) return { ok: true };
+      if (res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { id?: string };
+        return { ok: true, id: data.id ?? null };
+      }
+      lastStatus = res.status;
       console.error("Email send failed with status", res.status);
       if (res.status !== 429 && res.status < 500) break;
     } catch (err) {
@@ -59,7 +72,7 @@ export async function sendEmail(message: OutgoingEmail): Promise<SendResult> {
     }
     await new Promise((r) => setTimeout(r, 1500));
   }
-  return { ok: false, reason: "failed" };
+  return { ok: false, reason: "failed", status: lastStatus };
 }
 
 export function escapeHtml(s: string): string {
