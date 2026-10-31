@@ -9,7 +9,7 @@ export const product = {
     process.env.NEXT_PUBLIC_INTRO_PRICE ||
     "4.99",
   tagline: "Every House Has A First Resident. This One Never Left.",
-  sampleUrl: process.env.NEXT_PUBLIC_SAMPLE_PDF || "/samples/the-first-resident-prelude.pdf",
+  sampleUrl: process.env.NEXT_PUBLIC_SAMPLE_PDF || "/samples/PRELUDE%20-%20The%20First%20Resident%20of%20Briar%20Glen%20Ebook.pdf",
   videoUrl: process.env.NEXT_PUBLIC_VIDEO_URL || "https://www.youtube.com/embed/pOdHt66Bue4",
 
   // Legacy image references kept for TypeScript compatibility with older unused components.

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const sampleUrl = "/samples/the-first-resident-prelude.pdf";
+const sampleUrl = "/samples/PRELUDE%20-%20The%20First%20Resident%20of%20Briar%20Glen%20Ebook.pdf";
 
 const footerLinks = [
   { href: "#hero", label: "Home", external: false },

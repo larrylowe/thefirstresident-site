@@ -8,13 +8,16 @@
 import Link from "next/link";
 import { stripe } from "@/lib/stripe";
 import { RecoverPurchase } from "@/components/RecoverPurchase";
+import { EbookDownloads, OwnershipNote, type Remaining } from "@/components/EbookDownloads";
+import { allowance, getDownloadRecord, newRecord } from "@/lib/downloadRecords";
+import { getPaidAt } from "@/lib/purchase";
 
 type Props = {
   searchParams: Promise<{ session_id?: string }>;
 };
 
-function downloadHref(sessionId: string): string {
-  return "/api/download-token?session_id=" + encodeURIComponent(sessionId);
+function downloadHref(sessionId: string, format: "pdf" | "epub"): string {
+  return "/api/download-token?session_id=" + encodeURIComponent(sessionId) + "&format=" + format;
 }
 
 export default async function SuccessPage({ searchParams }: Props) {
@@ -22,6 +25,8 @@ export default async function SuccessPage({ searchParams }: Props) {
   const sessionId = params.session_id;
 
   let isPaid = false;
+  let remaining: Remaining | null = null;
+  let inWindow = true;
 
   if (sessionId) {
     try {
@@ -29,6 +34,19 @@ export default async function SuccessPage({ searchParams }: Props) {
       isPaid = session.payment_status === "paid";
     } catch {
       isPaid = false;
+    }
+  }
+
+  // Downloads left per format. Display only; the download route enforces the limits.
+  if (isPaid && sessionId) {
+    try {
+      const paidAt = () => getPaidAt(sessionId);
+      const record = (await getDownloadRecord(sessionId, paidAt)) ?? newRecord(await paidAt());
+      const a = allowance(record);
+      remaining = a.remaining;
+      inWindow = a.inWindow;
+    } catch {
+      remaining = null;
     }
   }
 
@@ -48,26 +66,25 @@ export default async function SuccessPage({ searchParams }: Props) {
               Your copy of <em>The First Resident of Briar Glen</em> is ready. Please
               download it below and save it somewhere safe.
             </p>
-            <p className="mt-3 text-sm text-aged/75">
-              Your secure download link is available for 72 hours and allows up to 3 downloads.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={downloadHref(sessionId)}
-                className="inline-flex justify-center rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
-              >
-                Download the e-book
-              </a>
-              <Link
-                href="/archive"
-                className="inline-flex justify-center rounded-sm border border-antique/60 px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-parchment transition hover:bg-antique hover:text-charcoal"
-              >
-                Enter the Archive
-              </Link>
-            </div>
+            <OwnershipNote />
+            <EbookDownloads
+              pdfHref={downloadHref(sessionId, "pdf")}
+              epubHref={downloadHref(sessionId, "epub")}
+              remaining={remaining}
+              inWindow={inWindow}
+            />
+            {remaining && (remaining.pdf === 0 || remaining.epub === 0) && (
+              <p className="mt-4 text-sm text-aged/75">
+                Need another download?{" "}
+                <Link href="/success" className="text-antique underline hover:text-parchment">
+                  Recover your purchase
+                </Link>{" "}
+                with your purchase email and the last 4 digits of your card.
+              </p>
+            )}
           </>
         ) : (
-          <RecoverPurchase />
+          <RecoverPurchase returning={!sessionId} />
         )}
 
         <div className="mt-12 border-t border-antique/20 pt-8">

@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { FadeIn } from "./FadeIn";
 
-const sampleUrl = "/samples/the-first-resident-prelude.pdf";
+const sampleUrl = "/samples/PRELUDE%20-%20The%20First%20Resident%20of%20Briar%20Glen%20Ebook.pdf";
+const sampleEpubUrl = "/samples/PRELUDE%20-%20The%20First%20Resident%20of%20Briar%20Glen%20Ebook.epub";
 
-/** Free Prelude sample. Links to the existing published PDF, unchanged. */
+/** Free Prelude: read online, or download the PDF or EPUB. */
 export function PreludeSection() {
   return (
     <section id="prelude" className="relative overflow-hidden bg-[#e8dcc2] text-ink" style={{ scrollMarginTop: "80px" }}>
@@ -38,14 +39,21 @@ export function PreludeSection() {
               rel="noopener noreferrer"
               className="inline-flex w-full items-center justify-center whitespace-nowrap bg-ink px-7 py-4 text-xs font-medium uppercase tracking-[0.2em] text-parchment transition hover:bg-charcoal sm:w-auto md:w-64"
             >
-              Read the Prelude Free
+              Read Online
             </a>
             <a
               href={sampleUrl}
               download
               className="inline-flex w-full items-center justify-center whitespace-nowrap border border-ink/60 px-7 py-4 text-xs font-medium uppercase tracking-[0.2em] text-ink transition hover:bg-ink hover:text-parchment sm:w-auto md:w-64"
             >
-              Download the PDF
+              Download PDF
+            </a>
+            <a
+              href={sampleEpubUrl}
+              download
+              className="inline-flex w-full items-center justify-center whitespace-nowrap border border-ink/60 px-7 py-4 text-xs font-medium uppercase tracking-[0.2em] text-ink transition hover:bg-ink hover:text-parchment sm:w-auto md:w-64"
+            >
+              Download EPUB
             </a>
           </div>
         </FadeIn>

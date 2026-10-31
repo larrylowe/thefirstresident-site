@@ -6,8 +6,9 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      // The Prelude PDF was renamed when the final-cover edition replaced it.
-      { source: "/samples/first-resident-sample.pdf", destination: "/samples/the-first-resident-prelude.pdf", permanent: true }
+      // Earlier Prelude PDF names now lead to the current edition.
+      { source: "/samples/first-resident-sample.pdf", destination: "/samples/PRELUDE%20-%20The%20First%20Resident%20of%20Briar%20Glen%20Ebook.pdf", permanent: true },
+      { source: "/samples/the-first-resident-prelude.pdf", destination: "/samples/PRELUDE%20-%20The%20First%20Resident%20of%20Briar%20Glen%20Ebook.pdf", permanent: true }
     ];
   }
 };

@@ -3,12 +3,12 @@
  *
  * Format: base64url(payload).base64url(hmac)
  * Payload: { sessionId, priceId, exp }
- * Lifetime: 10 minutes (TOKEN_TTL_SECONDS)
+ * Lifetime: 15 minutes (TOKEN_TTL_SECONDS)
  */
 
 import crypto from "crypto";
 
-const TOKEN_TTL_SECONDS = 10 * 60; // 10 minutes
+const TOKEN_TTL_SECONDS = 15 * 60; // 15 minutes
 
 interface TokenPayload {
   sessionId: string;
