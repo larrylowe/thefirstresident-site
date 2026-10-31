@@ -20,7 +20,7 @@ export const revalidate = 3600;
 //   1. Hero            - Section 1 House.png + approved cover + price
 //   2. The Story       - Section 2 Chelsea.png
 //   3. Emma + Trailer  - trailer thumbnail (Emma, 1984)
-//   4. Prelude         - prelude-poster.jpg, existing sample PDF
+//   4. Prelude         - prelude-woman-in-the-chair.png, Prelude PDF
 //   5. Offer           - approved cover
 //   6/7. History | Archive side by side
 //   8. A Note from the Author
