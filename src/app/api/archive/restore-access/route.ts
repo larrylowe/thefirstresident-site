@@ -55,16 +55,22 @@ function recordFailure(key: string) {
 }
 
 /** Paid ebook Checkout Sessions whose checkout email matches, newest first. */
-async function findCandidateSessions(email: string): Promise<Stripe.Checkout.Session[]> {
+async function findCandidateSessions(
+  email: string,
+  typedEmail: string
+): Promise<Stripe.Checkout.Session[]> {
   const found = new Map<string, Stripe.Checkout.Session>();
 
-  // Stripe filters by the email exactly as the buyer typed it at checkout.
-  const result = await stripe.checkout.sessions.list({
-    customer_details: { email },
-    status: "complete",
-    limit: 20,
-  });
-  for (const session of result.data) found.set(session.id, session);
+  // Stripe filters by the email exactly as the buyer typed it at checkout,
+  // so try it as typed here and in lowercase.
+  for (const candidate of new Set([typedEmail, email])) {
+    const result = await stripe.checkout.sessions.list({
+      customer_details: { email: candidate },
+      status: "complete",
+      limit: 20,
+    });
+    for (const session of result.data) found.set(session.id, session);
+  }
 
   // If the buyer typed different capitalisation at checkout, the exact filter
   // misses; fall back to a bounded scan of recent completed sessions.
@@ -124,11 +130,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: RATE_LIMIT_MESSAGE }, { status: 429 });
   }
 
+  let typedEmail: string;
   let email: string;
   let last4: string;
   try {
     const body = await request.json();
-    email = (body.email ?? "").toString().trim().toLowerCase();
+    typedEmail = (body.email ?? "").toString().trim();
+    email = typedEmail.toLowerCase();
     last4 = (body.last4 ?? "").toString().replace(/\D/g, "");
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
@@ -149,7 +157,7 @@ export async function POST(request: NextRequest) {
 
   try {
     let matchedSessionId: string | undefined;
-    for (const session of await findCandidateSessions(email)) {
+    for (const session of await findCandidateSessions(email, typedEmail)) {
       if (await sessionMatches(session, priceId, last4)) {
         matchedSessionId = session.id;
         break;
