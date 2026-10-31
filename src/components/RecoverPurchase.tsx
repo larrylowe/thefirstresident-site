@@ -52,12 +52,21 @@ export function RecoverPurchase() {
 
   if (status === "found") {
     return (
-      <div className="mt-8">
-        <p className="text-antique" role="status">{message}</p>
-        <p className="mt-2 text-sm text-aged/75">
+      <>
+        <p className="text-sm uppercase tracking-[0.28em] text-antique">
+          Purchase Complete
+        </p>
+        <h1 className="mt-4 font-serif text-5xl leading-tight">
+          Thank you for entering Briar Glen.
+        </h1>
+        <p className="mt-6 text-lg leading-8 text-aged" role="status">
+          {message} Your copy of <em>The First Resident of Briar Glen</em> is ready.
+          Please download it below and save it somewhere safe.
+        </p>
+        <p className="mt-3 text-sm text-aged/75">
           This download link works for 10 minutes. You can return here any time to get a new one.
         </p>
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <a
             href={downloadUrl}
             className="inline-flex justify-center rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
@@ -71,54 +80,76 @@ export function RecoverPurchase() {
             Enter the Archive
           </Link>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
-      <div className="flex flex-col gap-2">
-        <label htmlFor="recover-email" className={labelClass}>
-          Email used at checkout
-        </label>
-        <input
-          id="recover-email"
-          type="email"
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@example.com"
-          required
-          className={inputClass}
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <label htmlFor="recover-last4" className={labelClass}>
-          Last 4 digits of the card you paid with
-        </label>
-        <input
-          id="recover-last4"
-          inputMode="numeric"
-          autoComplete="off"
-          maxLength={4}
-          value={last4}
-          onChange={(e) => setLast4(e.target.value.replace(/\D/g, "").slice(0, 4))}
-          placeholder="1234"
-          required
-          aria-describedby="recover-message"
-          className={`${inputClass} sm:max-w-[10rem]`}
-        />
-      </div>
-      <button
-        type="submit"
-        disabled={status === "loading"}
-        className="w-full rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged disabled:opacity-60 sm:w-auto"
-      >
-        {status === "loading" ? "Checking…" : "Find my purchase"}
-      </button>
-      <p id="recover-message" role="alert" className="min-h-[1.5rem] text-sm leading-6 text-aged">
-        {message}
+    <>
+      <p className="text-sm uppercase tracking-[0.28em] text-antique">
+        Find Your Purchase
       </p>
-    </form>
+      <h1 className="mt-4 font-serif text-5xl leading-tight">
+        We couldn&rsquo;t confirm a purchase from this link.
+      </h1>
+      <p className="mt-6 text-lg leading-8 text-aged">
+        If you bought the ebook, enter the email you used at checkout and the last
+        4 digits of the card you paid with, and we will take you to your download.
+      </p>
+      <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="recover-email" className={labelClass}>
+            Email used at checkout
+          </label>
+          <input
+            id="recover-email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            required
+            className={inputClass}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="recover-last4" className={labelClass}>
+            Last 4 digits of the card you paid with
+          </label>
+          <input
+            id="recover-last4"
+            inputMode="numeric"
+            autoComplete="off"
+            maxLength={4}
+            value={last4}
+            onChange={(e) => setLast4(e.target.value.replace(/\D/g, "").slice(0, 4))}
+            placeholder="1234"
+            required
+            aria-describedby="recover-message"
+            className={`${inputClass} sm:max-w-[10rem]`}
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={status === "loading"}
+          className="w-full rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged disabled:opacity-60 sm:w-auto"
+        >
+          {status === "loading" ? "Checking…" : "Find my purchase"}
+        </button>
+        <p id="recover-message" role="alert" className="min-h-[1.5rem] text-sm leading-6 text-aged">
+          {message}
+        </p>
+      </form>
+      <p className="mt-6 text-sm text-aged/75">
+        Still stuck? Contact{" "}
+        <a
+          href="mailto:support@thefirstresident.com"
+          className="text-antique underline hover:text-parchment"
+        >
+          support@thefirstresident.com
+        </a>{" "}
+        with your receipt.
+      </p>
+    </>
   );
 }
