@@ -56,6 +56,8 @@ export async function POST(request: NextRequest) {
     });
 
     let verified = false;
+    // The paid ebook session that was matched, so the buyer can also download the ebook.
+    let verifiedSessionId: string | undefined;
 
     for (const pi of searchResult.data) {
       if (pi.status !== "succeeded") continue;
@@ -76,6 +78,7 @@ export async function POST(request: NextRequest) {
           );
           if (hasPriceMatch) {
             verified = true;
+            verifiedSessionId = session.id;
             break;
           }
         }
@@ -112,6 +115,7 @@ export async function POST(request: NextRequest) {
             );
             if (hasPriceMatch) {
               verified = true;
+              verifiedSessionId = session.id;
               break;
             }
           } else {
@@ -138,7 +142,12 @@ export async function POST(request: NextRequest) {
     const cookieHeader = buildArchiveCookieHeader(token);
 
     return NextResponse.json(
-      { message: SUCCESS_MESSAGE },
+      {
+        message: SUCCESS_MESSAGE,
+        ...(verifiedSessionId
+          ? { downloadUrl: "/success?session_id=" + encodeURIComponent(verifiedSessionId) }
+          : {}),
+      },
       {
         status: 200,
         headers: { "Set-Cookie": cookieHeader },

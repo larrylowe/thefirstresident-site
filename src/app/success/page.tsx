@@ -7,6 +7,7 @@
 
 import Link from "next/link";
 import { stripe } from "@/lib/stripe";
+import { RecoverPurchase } from "@/components/RecoverPurchase";
 
 type Props = {
   searchParams: Promise<{ session_id?: string }>;
@@ -35,40 +36,51 @@ export default async function SuccessPage({ searchParams }: Props) {
     <main className="min-h-screen bg-charcoal px-5 py-32 text-parchment">
       <div className="mx-auto max-w-2xl rounded-sm border border-antique/25 bg-moss p-10">
 
-        <p className="text-sm uppercase tracking-[0.28em] text-antique">
-          Purchase Complete
-        </p>
-        <h1 className="mt-4 font-serif text-5xl leading-tight">
-          Thank you for entering Briar Glen.
-        </h1>
-        <p className="mt-6 text-lg leading-8 text-aged">
-          Your copy of <em>The First Resident of Briar Glen</em> is ready. Please
-          download it below and save it somewhere safe.
-        </p>
-        <p className="mt-3 text-sm text-aged/75">
-          Your secure download link is available for 72 hours and allows up to 3 downloads.
-        </p>
-
         {isPaid && sessionId ? (
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href={downloadHref(sessionId)}
-              className="inline-flex justify-center rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
-            >
-              Download the e-book
-            </a>
-            <Link
-              href="/archive"
-              className="inline-flex justify-center rounded-sm border border-antique/60 px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-parchment transition hover:bg-antique hover:text-charcoal"
-            >
-              Enter the Archive
-            </Link>
-          </div>
+          <>
+            <p className="text-sm uppercase tracking-[0.28em] text-antique">
+              Purchase Complete
+            </p>
+            <h1 className="mt-4 font-serif text-5xl leading-tight">
+              Thank you for entering Briar Glen.
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-aged">
+              Your copy of <em>The First Resident of Briar Glen</em> is ready. Please
+              download it below and save it somewhere safe.
+            </p>
+            <p className="mt-3 text-sm text-aged/75">
+              Your secure download link is available for 72 hours and allows up to 3 downloads.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a
+                href={downloadHref(sessionId)}
+                className="inline-flex justify-center rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
+              >
+                Download the e-book
+              </a>
+              <Link
+                href="/archive"
+                className="inline-flex justify-center rounded-sm border border-antique/60 px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-parchment transition hover:bg-antique hover:text-charcoal"
+              >
+                Enter the Archive
+              </Link>
+            </div>
+          </>
         ) : (
-          <div className="mt-8 rounded-sm border border-antique/25 bg-charcoal/50 p-6">
-            <p className="text-aged">
-              Payment has not been completed yet. If you believe this is an
-              error, please contact{" "}
+          <>
+            <p className="text-sm uppercase tracking-[0.28em] text-antique">
+              Find Your Purchase
+            </p>
+            <h1 className="mt-4 font-serif text-5xl leading-tight">
+              We couldn&rsquo;t confirm a purchase from this link.
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-aged">
+              If you bought the ebook, enter the email you used at checkout and we will
+              take you to your download.
+            </p>
+            <RecoverPurchase />
+            <p className="mt-6 text-sm text-aged/75">
+              Still stuck? Contact{" "}
               <a
                 href="mailto:support@thefirstresident.com"
                 className="text-antique underline hover:text-parchment"
@@ -77,7 +89,7 @@ export default async function SuccessPage({ searchParams }: Props) {
               </a>{" "}
               with your receipt.
             </p>
-          </div>
+          </>
         )}
 
         <div className="mt-12 border-t border-antique/20 pt-8">
