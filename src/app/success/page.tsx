@@ -75,8 +75,8 @@ export default async function SuccessPage({ searchParams }: Props) {
               We couldn&rsquo;t confirm a purchase from this link.
             </h1>
             <p className="mt-6 text-lg leading-8 text-aged">
-              If you bought the ebook, enter the email you used at checkout and we will
-              take you to your download.
+              If you bought the ebook, enter the email you used at checkout and the last
+              4 digits of the card you paid with, and we will take you to your download.
             </p>
             <RecoverPurchase />
             <p className="mt-6 text-sm text-aged/75">

@@ -30,10 +30,12 @@ const SUCCESS_MESSAGE = "Access restored. Welcome back to Briar Glen.";
 
 export async function POST(request: NextRequest) {
   let email: string;
+  let last4: string;
 
   try {
     const body = await request.json();
     email = (body.email ?? "").toString().trim().toLowerCase();
+    last4 = (body.last4 ?? "").toString().replace(/\D/g, "");
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
@@ -58,6 +60,7 @@ export async function POST(request: NextRequest) {
     let verified = false;
     // The paid ebook session that was matched, so the buyer can also download the ebook.
     let verifiedSessionId: string | undefined;
+    let verifiedPaymentIntentId: string | undefined;
 
     for (const pi of searchResult.data) {
       if (pi.status !== "succeeded") continue;
@@ -79,6 +82,7 @@ export async function POST(request: NextRequest) {
           if (hasPriceMatch) {
             verified = true;
             verifiedSessionId = session.id;
+            verifiedPaymentIntentId = pi.id;
             break;
           }
         }
@@ -116,6 +120,10 @@ export async function POST(request: NextRequest) {
             if (hasPriceMatch) {
               verified = true;
               verifiedSessionId = session.id;
+              verifiedPaymentIntentId =
+                typeof session.payment_intent === "string"
+                  ? session.payment_intent
+                  : session.payment_intent?.id;
               break;
             }
           } else {
@@ -137,6 +145,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: FAILURE_MESSAGE }, { status: 403 });
     }
 
+    // The ebook download is only handed out when the caller also knows the last
+    // 4 digits of the card used for this purchase, since the email alone is not
+    // proof of ownership.
+    let downloadUrl: string | undefined;
+    if (verifiedSessionId && verifiedPaymentIntentId && last4.length === 4) {
+      const paymentIntent = await stripe.paymentIntents.retrieve(
+        verifiedPaymentIntentId,
+        { expand: ["latest_charge"] }
+      );
+      const charge = paymentIntent.latest_charge;
+      const cardLast4 =
+        charge && typeof charge !== "string"
+          ? charge.payment_method_details?.card?.last4
+          : undefined;
+      if (cardLast4 === last4) {
+        downloadUrl = "/success?session_id=" + encodeURIComponent(verifiedSessionId);
+      }
+    }
+
     // Verified — set cookie and return success
     const token = createArchiveToken();
     const cookieHeader = buildArchiveCookieHeader(token);
@@ -144,9 +171,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         message: SUCCESS_MESSAGE,
-        ...(verifiedSessionId
-          ? { downloadUrl: "/success?session_id=" + encodeURIComponent(verifiedSessionId) }
-          : {}),
+        ...(downloadUrl ? { downloadUrl } : {}),
       },
       {
         status: 200,

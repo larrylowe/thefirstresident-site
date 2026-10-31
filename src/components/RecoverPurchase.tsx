@@ -3,17 +3,19 @@
 import { useState } from "react";
 
 /**
- * Finds a paid ebook purchase by checkout email (via /api/archive/restore-access)
- * and sends the buyer to the verified download page for that purchase.
+ * Finds a paid ebook purchase by checkout email and the card's last 4 digits
+ * (via /api/archive/restore-access) and sends the buyer to the verified
+ * download page for that purchase.
  */
 export function RecoverPurchase() {
   const [email, setEmail] = useState("");
+  const [last4, setLast4] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "error">("idle");
   const [message, setMessage] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.trim()) return;
+    if (!email.trim() || last4.length !== 4) return;
     setStatus("loading");
     setMessage("");
 
@@ -21,7 +23,7 @@ export function RecoverPurchase() {
       const res = await fetch("/api/archive/restore-access", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
+        body: JSON.stringify({ email: email.trim(), last4 }),
       });
       const data = await res.json();
 
@@ -31,8 +33,10 @@ export function RecoverPurchase() {
       }
       setStatus("error");
       setMessage(
-        data.error ||
-          "We could not verify an ebook purchase for that email. Please check the email used at checkout."
+        res.ok
+          ? "We could not match those card digits to the purchase. Please check them, or contact support with your receipt."
+          : data.error ||
+              "We could not verify an ebook purchase for that email. Please check the email used at checkout."
       );
     } catch {
       setStatus("error");
@@ -53,6 +57,20 @@ export function RecoverPurchase() {
         placeholder="Email used at checkout"
         required
         className="w-full flex-1 border border-antique/30 bg-charcoal/60 px-4 py-3 text-sm text-parchment placeholder-aged/40 focus:border-antique/70 focus:outline-none"
+      />
+      <label htmlFor="recover-last4" className="sr-only">
+        Last 4 digits of the card used
+      </label>
+      <input
+        id="recover-last4"
+        inputMode="numeric"
+        autoComplete="off"
+        maxLength={4}
+        value={last4}
+        onChange={(e) => setLast4(e.target.value.replace(/\D/g, "").slice(0, 4))}
+        placeholder="Card last 4"
+        required
+        className="w-full border border-antique/30 bg-charcoal/60 px-4 py-3 text-sm text-parchment placeholder-aged/40 focus:border-antique/70 focus:outline-none sm:w-32"
       />
       <button
         type="submit"
