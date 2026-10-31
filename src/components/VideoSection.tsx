@@ -60,8 +60,8 @@ export function VideoSection({ price }: { price: string }) {
                 className="group absolute inset-0 block h-full w-full cursor-pointer"
               >
                 <Image
-                  src="/images/trailer-thumbnail.jpg"
-                  alt="Trailer still: Briar Glen in a storm, Emma in the lit window, Chelsea outside. She's been waiting."
+                  src="/images/trailer-emma-at-the-window.png"
+                  alt="Trailer still: Emma, seen from behind, watches through a rain-covered window as Chelsea comes up the path carrying a pie."
                   fill
                   sizes="(max-width: 1024px) 100vw, 60vw"
                   className="object-cover"

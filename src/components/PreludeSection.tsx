@@ -9,12 +9,12 @@ export function PreludeSection() {
     <section id="prelude" className="relative overflow-hidden bg-[#e8dcc2] text-ink" style={{ scrollMarginTop: "80px" }}>
       {/* Stable anchor for older #sample links */}
       <span id="sample" aria-hidden="true" className="absolute top-0" />
-      <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-center gap-10 px-5 py-16 sm:px-8 md:grid-cols-[minmax(200px,300px)_minmax(0,1fr)] md:gap-14 md:px-12 md:py-24 lg:grid-cols-[300px_minmax(0,1fr)_minmax(260px,330px)] lg:px-16">
+      <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-center gap-10 px-5 py-16 sm:px-8 md:grid-cols-[minmax(200px,300px)_minmax(0,1fr)] md:gap-14 md:px-12 md:py-24 lg:px-16 xl:grid-cols-[300px_minmax(0,1fr)_minmax(260px,330px)]">
         <FadeIn className="mx-auto w-[220px] sm:w-[260px] md:w-full">
           <div className="relative aspect-[2/3] shadow-[0_24px_50px_rgba(33,27,22,0.45)]">
             <Image
-              src="/images/prelude-poster.jpg"
-              alt="Prelude: The Woman in the Chair. Virginia, Spring 1984"
+              src="/images/prelude-woman-in-the-chair.png"
+              alt="Chelsea stands frozen inside Briar Glen, the dropped pie at her feet, facing Emma seated in her chair."
               fill
               sizes="(max-width: 768px) 260px, 300px"
               className="object-cover"
@@ -50,7 +50,7 @@ export function PreludeSection() {
           </div>
         </FadeIn>
 
-        <FadeIn delay={0.2} className="md:col-span-2 lg:col-span-1">
+        <FadeIn delay={0.2} className="md:col-span-2 xl:col-span-1">
           <figure className="mx-auto max-w-sm bg-[#f6efe2] px-8 py-9 shadow-[0_18px_40px_rgba(33,27,22,0.18)]">
             <blockquote className="space-y-2 font-serif text-[21px] leading-snug text-ink">
               <p>Then she saw her.</p>
