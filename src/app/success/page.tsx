@@ -34,7 +34,7 @@ export default async function SuccessPage({ searchParams }: Props) {
 
   return (
     <main className="min-h-screen bg-charcoal px-5 py-32 text-parchment">
-      <div className="mx-auto max-w-2xl rounded-sm border border-antique/25 bg-moss p-10">
+      <div className="mx-auto max-w-2xl rounded-sm border border-antique/25 bg-moss p-6 sm:p-10">
 
         {isPaid && sessionId ? (
           <>
