@@ -28,8 +28,12 @@ export function ArchiveGate({ price }: { price: string }) {
       if (res.ok && data.message) {
         setRestoreStatus("success");
         setRestoreMessage(data.message);
-        // Small delay then reload so the cookie takes effect
-        setTimeout(() => window.location.reload(), 1200);
+        // Small delay, then go to the purchase's download page (which links to the
+        // Archive) or reload so the cookie takes effect
+        setTimeout(() => {
+          if (data.downloadUrl) window.location.assign(data.downloadUrl);
+          else window.location.reload();
+        }, 1200);
       } else {
         setRestoreStatus("error");
         setRestoreMessage(
