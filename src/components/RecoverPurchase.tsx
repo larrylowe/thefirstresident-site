@@ -66,12 +66,21 @@ export function RecoverPurchase() {
         <p className="mt-3 text-sm text-aged/75">
           This download link works for 10 minutes. You can return here any time to get a new one.
         </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <p className="mt-3 text-sm text-aged/75">
+          Your purchase includes both formats. Download either or both.
+        </p>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <a
-            href={downloadUrl}
+            href={downloadUrl + "&format=pdf"}
             className="inline-flex justify-center rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
           >
-            Download the e-book
+            Download PDF
+          </a>
+          <a
+            href={downloadUrl + "&format=epub"}
+            className="inline-flex justify-center rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
+          >
+            Download EPUB
           </a>
           <Link
             href="/archive"

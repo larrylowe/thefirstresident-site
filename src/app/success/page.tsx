@@ -13,8 +13,8 @@ type Props = {
   searchParams: Promise<{ session_id?: string }>;
 };
 
-function downloadHref(sessionId: string): string {
-  return "/api/download-token?session_id=" + encodeURIComponent(sessionId);
+function downloadHref(sessionId: string, format: "pdf" | "epub"): string {
+  return "/api/download-token?session_id=" + encodeURIComponent(sessionId) + "&format=" + format;
 }
 
 export default async function SuccessPage({ searchParams }: Props) {
@@ -51,12 +51,21 @@ export default async function SuccessPage({ searchParams }: Props) {
             <p className="mt-3 text-sm text-aged/75">
               Your secure download link is available for 72 hours and allows up to 3 downloads.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <p className="mt-3 text-sm text-aged/75">
+              Your purchase includes both formats. Download either or both.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
-                href={downloadHref(sessionId)}
+                href={downloadHref(sessionId, "pdf")}
                 className="inline-flex justify-center rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
               >
-                Download the e-book
+                Download PDF
+              </a>
+              <a
+                href={downloadHref(sessionId, "epub")}
+                className="inline-flex justify-center rounded-sm bg-antique px-7 py-4 text-sm font-medium uppercase tracking-[0.18em] text-charcoal transition hover:bg-aged"
+              >
+                Download EPUB
               </a>
               <Link
                 href="/archive"
