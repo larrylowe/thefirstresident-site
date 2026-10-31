@@ -8,13 +8,17 @@
  *                         e.g. orders@thefirstresident.com
  * The display name is always "Partner54 Digital".
  *
- * Optional:
- *   EMAIL_REPLY_TO      – e.g. support@thefirstresident.com. Set it only once
- *                         mail to that address is forwarded somewhere read;
- *                         unset, replies go to the sending address.
+ * Replies go to support@thefirstresident.com (a Microsoft 365 mailbox that
+ * forwards to the publisher), because the sending address does not receive
+ * mail. EMAIL_REPLY_TO overrides it if the support address ever changes.
  */
 
 export const SENDER_NAME = "Partner54 Digital";
+export const SUPPORT_EMAIL = "support@thefirstresident.com";
+
+export function replyToAddress(): string {
+  return process.env.EMAIL_REPLY_TO?.trim() || SUPPORT_EMAIL;
+}
 
 export function emailConfigured(): boolean {
   return !!process.env.RESEND_API_KEY && !!process.env.EMAIL_FROM_ADDRESS;
@@ -57,7 +61,7 @@ export async function sendEmail(message: OutgoingEmail): Promise<SendResult> {
           subject: message.subject,
           html: message.html,
           text: message.text,
-          ...(process.env.EMAIL_REPLY_TO ? { reply_to: process.env.EMAIL_REPLY_TO } : {}),
+          reply_to: replyToAddress(),
         }),
       });
       if (res.ok) {
