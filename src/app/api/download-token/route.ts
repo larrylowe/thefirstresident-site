@@ -3,7 +3,7 @@
  *
  * Step 1 of the two-step secure download flow.
  *
- * Validates the Stripe Checkout Session, then mints a short-lived (10 min)
+ * Validates the Stripe Checkout Session, then mints a short-lived (15 min)
  * HMAC-signed token and redirects to /api/download?token=... so the user's
  * browser initiates the file download.
  *
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
     return errorHtml("This purchase does not include the e-book.");
   }
 
-  // --- 6. Mint a 10-minute signed token and redirect to /api/download ---
+  // --- 6. Mint a 15-minute signed token and redirect to /api/download ---
   const token = createDownloadToken(sessionId, priceId);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 

@@ -3,35 +3,36 @@
  *
  * Step 2 of the two-step secure download flow.
  *
- * Verifies the HMAC token from /api/download-token, checks the download
- * record in Vercel Blob (window + count), then streams the private PDF or
- * EPUB (format=epub) from
- * Vercel Blob with the correct download headers.
+ * Verifies the HMAC token from /api/download-token (or from recovery), fetches
+ * the private PDF or EPUB from Vercel Blob, and only then takes one download
+ * from that format's allowance (see lib/downloadRecords) before streaming it.
  *
  * Security:
- *  - Token must be valid HMAC-SHA256 signed by DOWNLOAD_TOKEN_SECRET
- *  - Token must not be expired (10 min TTL)
+ *  - Token must be valid HMAC-SHA256 signed by DOWNLOAD_TOKEN_SECRET and
+ *    unexpired (15 min TTL)
  *  - PriceId in token must match STRIPE_PRICE_ID_EBOOK
- *  - Download must be within the 72-hour window
- *  - Download count must be < MAX_DOWNLOADS (3)
- *  - PDF is fetched server-side via @vercel/blob (private access)
- *  - No public PDF URL is ever returned to the client
+ *  - 3 PDF + 3 EPUB downloads in the 14 days after payment, plus any
+ *    credits granted by verified recovery
+ *  - The file is fetched server-side from private Blob; no Blob URL is ever
+ *    returned to the client
  *
- * Note: downloadCount is incremented immediately before streaming begins.
- * This means a failed stream (network drop) still consumes one of the 3
- * allowed downloads. This is acceptable per launch requirements.
+ * What counts as a download: the file was retrieved from storage and the
+ * response is about to start. Nothing is counted when the token, price,
+ * allowance or storage check fails. The server cannot know whether the
+ * browser saved the file. The allowance is taken with a compare-and-swap
+ * write, so simultaneous requests cannot exceed it.
  */
 
 import { NextRequest } from "next/server";
 import { get, list } from "@vercel/blob";
 import { verifyDownloadToken } from "@/lib/downloadToken";
-import {
-  getDownloadRecord,
-  createDownloadRecord,
-  incrementDownloadCount,
-  MAX_DOWNLOADS,
-} from "@/lib/downloadRecords";
+import { allowance, consume, getDownloadRecord, updateRecord } from "@/lib/downloadRecords";
+import { getPaidAt } from "@/lib/purchase";
 import { errorHtml } from "@/lib/errorHtml";
+
+const NONE_LEFT_MESSAGE =
+  "There are no downloads left for this format right now. Your purchase is still yours: " +
+  "visit thefirstresident.com/success to recover access with your purchase email and the last 4 digits of your card.";
 
 const LEGACY_PDF_PATH = "ebooks/The_First_Resident_of_Briar_Glen_Ebook_Larry_Lowe.pdf";
 
@@ -103,29 +104,19 @@ export async function GET(request: NextRequest) {
     return errorHtml("This purchase does not include the e-book.");
   }
 
-  // --- 5. Get or create Blob download record ---
-  let record = await getDownloadRecord(sessionId);
-  if (!record) {
-    record = await createDownloadRecord(sessionId);
+  // --- 4. Quick allowance check before touching the file (read only) ---
+  const paidAt = () => getPaidAt(sessionId);
+  try {
+    const existing = await getDownloadRecord(sessionId, paidAt);
+    if (existing && allowance(existing).remaining[format] <= 0) {
+      return errorHtml(NONE_LEFT_MESSAGE, 429);
+    }
+  } catch (err) {
+    console.error("Download record read failed:", err);
+    return errorHtml("Downloads are briefly unavailable. Please try again in a minute.", 503);
   }
 
-  // --- 6. Check 72-hour download window ---
-  if (Date.now() > new Date(record.expiresAt).getTime()) {
-    return errorHtml(
-      "This secure download window has expired. Please contact us with your receipt and we will help you access your copy.",
-      410
-    );
-  }
-
-  // --- 7. Check 3-download limit ---
-  if (record.downloadCount >= MAX_DOWNLOADS) {
-    return errorHtml(
-      "This purchase has reached its download limit. Please contact us with your receipt if you need help accessing your copy.",
-      429
-    );
-  }
-
-  // --- 8. Find the first candidate blob with an exact pathname, then fetch it privately.
+  // --- 5. Find the first candidate blob with an exact pathname, then fetch it privately.
   let blobResult;
   try {
     let blob;
@@ -157,10 +148,24 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // --- 9. Increment count before streaming (see note at top of file) ---
-  await incrementDownloadCount(sessionId, record);
+  // --- 6. Take one download of this format atomically; stop if none is left ---
+  let taken: boolean;
+  try {
+    taken = await updateRecord(sessionId, paidAt, (record) => {
+      const ok = consume(record, format);
+      return { result: ok, write: ok };
+    });
+  } catch (err) {
+    console.error("Download record update failed:", err);
+    await blobResult.stream.cancel().catch(() => {});
+    return errorHtml("Downloads are briefly unavailable. Please try again in a minute.", 503);
+  }
+  if (!taken) {
+    await blobResult.stream.cancel().catch(() => {});
+    return errorHtml(NONE_LEFT_MESSAGE, 429);
+  }
 
-  // --- 10. Stream the file to the client ---
+  // --- 7. Stream the file to the client ---
   const { filename, contentType } = FORMATS[format];
   return new Response(blobResult.stream, {
     headers: {

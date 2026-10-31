@@ -5,144 +5,35 @@
  * ownership with the email used at checkout plus the last 4 digits of the card
  * that paid. Both are checked against the same paid, unrefunded Checkout
  * Session for the ebook price, looked up live in Stripe, so purchases made
- * before this route existed are covered.
+ * before this route existed are covered (see lib/purchase).
  *
  * On success it sets the Archive cookie and returns a short-lived signed
- * download link (see lib/downloadToken). Every failure returns the same
- * generic message, so the response never reveals whether an email has bought
- * the book. Repeated failures from one IP are rate-limited.
+ * download link with the downloads left per format, and whether renewed
+ * credits are available (which needs an emailed code: /api/archive/send-code).
+ * Every failure returns the same generic message, so the response never
+ * reveals whether an email has bought the book. Repeated failures from one IP
+ * are rate-limited.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import type Stripe from "stripe";
-import { stripe } from "@/lib/stripe";
-import { createArchiveToken, buildArchiveCookieHeader } from "@/lib/archiveAccess";
-import { createDownloadToken } from "@/lib/downloadToken";
-
-const FAILURE_MESSAGE =
-  "We could not match those details to a completed ebook purchase. " +
-  "Please check the email used at checkout and the last 4 digits of the card, " +
-  "or contact support@thefirstresident.com with your receipt.";
-
-const RATE_LIMIT_MESSAGE =
-  "Too many attempts. Please wait 15 minutes and try again, or contact support@thefirstresident.com.";
-
-const SUCCESS_MESSAGE = "Purchase found. Welcome back to Briar Glen.";
-
-// Failed attempts per client IP. In-memory, so it is per server instance:
-// it slows guessing rather than guaranteeing a global limit.
-const MAX_FAILURES = 5;
-const WINDOW_MS = 15 * 60 * 1000;
-const failures = new Map<string, { count: number; resetAt: number }>();
-
-function isRateLimited(key: string): boolean {
-  const entry = failures.get(key);
-  if (!entry) return false;
-  if (Date.now() > entry.resetAt) {
-    failures.delete(key);
-    return false;
-  }
-  return entry.count >= MAX_FAILURES;
-}
-
-function recordFailure(key: string) {
-  const entry = failures.get(key);
-  if (!entry || Date.now() > entry.resetAt) {
-    failures.set(key, { count: 1, resetAt: Date.now() + WINDOW_MS });
-  } else {
-    entry.count += 1;
-  }
-}
-
-/** Paid ebook Checkout Sessions whose checkout email matches, newest first. */
-async function findCandidateSessions(
-  email: string,
-  typedEmail: string
-): Promise<Stripe.Checkout.Session[]> {
-  const found = new Map<string, Stripe.Checkout.Session>();
-
-  // Stripe filters by the email exactly as the buyer typed it at checkout,
-  // so try it as typed here and in lowercase.
-  for (const candidate of new Set([typedEmail, email])) {
-    const result = await stripe.checkout.sessions.list({
-      customer_details: { email: candidate },
-      status: "complete",
-      limit: 20,
-    });
-    for (const session of result.data) found.set(session.id, session);
-  }
-
-  // If the buyer typed different capitalisation at checkout, the exact filter
-  // misses; fall back to a bounded scan of recent completed sessions.
-  if (found.size === 0) {
-    let startingAfter: string | undefined;
-    for (let page = 0; page < 5; page++) {
-      const batch = await stripe.checkout.sessions.list({
-        status: "complete",
-        limit: 100,
-        ...(startingAfter ? { starting_after: startingAfter } : {}),
-      });
-      for (const session of batch.data) {
-        if ((session.customer_details?.email ?? "").toLowerCase() === email) {
-          found.set(session.id, session);
-        }
-      }
-      if (!batch.has_more || batch.data.length === 0) break;
-      startingAfter = batch.data[batch.data.length - 1].id;
-    }
-  }
-
-  return [...found.values()].filter(
-    (s) => s.mode === "payment" && s.payment_status === "paid"
-  );
-}
-
-/** True when the session bought the ebook and its charge was paid by a card ending in last4 and not refunded. */
-async function sessionMatches(
-  session: Stripe.Checkout.Session,
-  priceId: string,
-  last4: string
-): Promise<boolean> {
-  const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 10 });
-  if (!lineItems.data.some((item) => item.price?.id === priceId)) return false;
-
-  const paymentIntentId =
-    typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
-  if (!paymentIntentId) return false;
-
-  const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId, {
-    expand: ["latest_charge"],
-  });
-  if (paymentIntent.status !== "succeeded") return false;
-
-  const charge = paymentIntent.latest_charge;
-  if (!charge || typeof charge === "string") return false;
-  if (!charge.paid || charge.refunded || charge.amount_refunded > 0) return false;
-
-  return charge.payment_method_details?.card?.last4 === last4;
-}
+import { findPurchase, parseRecoveryInput } from "@/lib/purchase";
+import { allowance, getDownloadRecord, newRecord } from "@/lib/downloadRecords";
+import { clientKey, isRateLimited, recordFailure, RATE_LIMIT_MESSAGE } from "@/lib/rateLimit";
+import { accessPayload, archiveCookie, FAILURE_MESSAGE, SUCCESS_MESSAGE } from "@/lib/recoveryResponse";
 
 export async function POST(request: NextRequest) {
-  const clientKey =
-    request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
-
-  if (isRateLimited(clientKey)) {
+  const key = clientKey(request.headers);
+  if (isRateLimited(key)) {
     return NextResponse.json({ error: RATE_LIMIT_MESSAGE }, { status: 429 });
   }
 
-  let typedEmail: string;
-  let email: string;
-  let last4: string;
+  let input;
   try {
-    const body = await request.json();
-    typedEmail = (body.email ?? "").toString().trim();
-    email = typedEmail.toLowerCase();
-    last4 = (body.last4 ?? "").toString().replace(/\D/g, "");
+    input = parseRecoveryInput(await request.json());
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
-
-  if (!email.includes("@") || last4.length !== 4) {
+  if (!input) {
     return NextResponse.json(
       { error: "Enter the email used at checkout and the last 4 digits of the card." },
       { status: 400 }
@@ -155,32 +46,36 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: FAILURE_MESSAGE }, { status: 500 });
   }
 
+  let purchase;
   try {
-    let matchedSessionId: string | undefined;
-    for (const session of await findCandidateSessions(email, typedEmail)) {
-      if (await sessionMatches(session, priceId, last4)) {
-        matchedSessionId = session.id;
-        break;
-      }
-    }
-
-    if (!matchedSessionId) {
-      recordFailure(clientKey);
-      return NextResponse.json({ error: FAILURE_MESSAGE }, { status: 403 });
-    }
-
-    const cookieHeader = buildArchiveCookieHeader(createArchiveToken());
-    const downloadUrl =
-      "/api/download?token=" + encodeURIComponent(createDownloadToken(matchedSessionId, priceId));
-
-    return NextResponse.json(
-      { message: SUCCESS_MESSAGE, downloadUrl },
-      { status: 200, headers: { "Set-Cookie": cookieHeader } }
-    );
+    purchase = await findPurchase(input.typedEmail, input.last4, priceId);
   } catch (err) {
     // Log the Stripe error type only; never the request body.
     const e = err as { type?: string; message?: string };
     console.error("Purchase recovery error:", e.type, e.message);
     return NextResponse.json({ error: FAILURE_MESSAGE }, { status: 403 });
+  }
+
+  if (!purchase) {
+    recordFailure(key);
+    return NextResponse.json({ error: FAILURE_MESSAGE }, { status: 403 });
+  }
+
+  const headers = { "Set-Cookie": archiveCookie() };
+  try {
+    const record =
+      (await getDownloadRecord(purchase.sessionId, async () => purchase.paidAt)) ??
+      newRecord(purchase.paidAt);
+    return NextResponse.json(
+      { message: SUCCESS_MESSAGE, ...accessPayload(purchase.sessionId, priceId, allowance(record)) },
+      { status: 200, headers }
+    );
+  } catch (err) {
+    // Storage hiccup: the purchase is verified, so still restore the Archive.
+    console.error("Download record read failed during recovery:", (err as Error).message);
+    return NextResponse.json(
+      { message: SUCCESS_MESSAGE, error: "Downloads are briefly unavailable. Please try again in a minute." },
+      { status: 200, headers }
+    );
   }
 }
